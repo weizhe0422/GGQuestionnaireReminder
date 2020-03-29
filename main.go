@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 )
 
 var bot *linebot.Client
@@ -70,13 +69,13 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 										Type:   linebot.FlexComponentTypeButton,
 										Layout: linebot.FlexBoxLayoutTypeVertical,
 										Contents: []linebot.FlexComponent{
-											&linebot.ButtonComponent{
+											/*&linebot.ButtonComponent{
 												Type: linebot.FlexComponentTypeText,
 												Action: linebot.NewDatetimePickerAction("選擇提醒時間", "remindTime","time",
 														time.Now().String(),time.Now().AddDate(1,0,0).String(),time.Now().String()),
-											},
+											},*/
 											&linebot.ButtonComponent{
-												Type: linebot.FlexComponentTypeText,
+												Type: linebot.FlexComponentTypeButton,
 												Action: linebot.NewURIAction("防疫問卷",  surveycakeURL),
 											},
 										},
