@@ -16,12 +16,10 @@ func main() {
 	var err error
 	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
 	log.Println("Bot:", bot, " err:", err)
-
 	http.HandleFunc("/callback", callbackHandler)
 	port := os.Getenv("PORT")
 	addr := fmt.Sprintf(":%s", port)
 	http.ListenAndServe(addr, nil)
-
 }
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
@@ -40,12 +38,33 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		if event.Type == linebot.EventTypeMessage {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
-				//quota, err := bot.GetMessageQuota().Do()
-				if err != nil {
-					log.Println("Quota err:", err)
-				}
-				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+message.Text)).Do(); err != nil {
-					log.Print(err)
+				switch message.Text {
+				case "開始":
+					bot.ReplyMessage(event.ReplyToken,
+						linebot.NewFlexMessage("你想設定什麼呢?", &linebot.BubbleContainer{
+							Type:linebot.FlexContainerTypeBubble,
+							Body:&linebot.BoxComponent{
+								Type:     linebot.FlexComponentTypeBox,
+								Layout:   linebot.FlexBoxLayoutTypeHorizontal,
+								Contents: []linebot.FlexComponent{
+									&linebot.TextComponent{
+										Type:    linebot.FlexComponentTypeText,
+										Text: 	"防疫小幫手問卷",
+									},
+									&linebot.TextComponent{
+										Type:    linebot.FlexComponentTypeText,
+										Text: 	"其他",
+									},
+								},
+								Flex:     nil,
+								Spacing:  "",
+								Margin:   "",
+							},
+						}))
+				case "設定填問卷提醒時間":
+					if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+message.Text)).Do(); err != nil {
+						log.Print(err)
+					}
 				}
 			}
 		}
