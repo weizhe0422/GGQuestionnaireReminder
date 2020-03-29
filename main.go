@@ -115,7 +115,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		case linebot.EventTypePostback:
 			switch event.Postback.Data{
 			case "remindTime":
-				bot.PushMessage(event.Source.UserID, linebot.NewTextMessage(event.Postback.Params.Time)).Do()
+				bot.PushMessage(event.Source.UserID, linebot.NewTextMessage(event.Source.UserID+"預定了每天"+event.Postback.Params.Time+"提醒填寫問卷!")).Do()
 			}
 		default:
 			bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("DEFAULT")).Do()
