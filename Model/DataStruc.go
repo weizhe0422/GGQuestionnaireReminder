@@ -1,8 +1,7 @@
 package Model
 
-import "time"
-
 type User struct {
-	NTAccount string `bson:"ntaccount"`
-	RemindTime time.Time `bson:"remindtime"`
+	NTAccount  string    `bson:"ntaccount"`
+	RemindTime string `bson:"remindtime"`
+	LineId     string    `bson:"lineid"`
 }

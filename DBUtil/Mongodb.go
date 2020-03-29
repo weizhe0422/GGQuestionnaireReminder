@@ -34,13 +34,14 @@ func (m *MongoDB) InsertOneRecord(userInfo Model.User) (*mongo.InsertOneResult, 
 
 	collection := dbUtil.Database(m.Database).Collection(m.Collection)
 
-	if notExist, _ := m.FindRecord(userInfo.NTAccount); notExist {
+	if notExist, _ := m.FindRecord(userInfo.LineId); notExist {
 		return nil, fmt.Errorf("already registed")
 	}
 
 	insertResult, err := collection.InsertOne(context.TODO(), bson.M{
 		"ntaccount": userInfo.NTAccount,
 		"remindtime": userInfo.RemindTime,
+		"lineid":userInfo.LineId,
 	})
 	if err != nil {
 		log.Printf("failed to regist NT account: %v",err)
@@ -58,7 +59,7 @@ func (m *MongoDB) FindRecord(value string) (bool, error) {
 	}
 	collection := dbUtil.Database(m.Database).Collection(m.Collection)
 	ctx, _ := context.WithTimeout(context.Background(), 30 *time.Second)
-	filter := bson.M{"ntaccount": value}
+	filter := bson.M{"lineid": value}
 	err = collection.FindOne(ctx, filter).Decode(&Model.User{})
 	if err != nil {
 		return false, fmt.Errorf("failed to find: %v", err)

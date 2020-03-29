@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/line/line-bot-sdk-go/linebot"
+	"github.com/weizhe0422/GGQuestionnaireReminder/DBUtil"
+	"github.com/weizhe0422/GGQuestionnaireReminder/Model"
 	"log"
 	"net/http"
 	"os"
@@ -38,11 +40,11 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	/*mongo := &DBUtil.MongoDB{
+	mongo := &DBUtil.MongoDB{
 		URL: mongoAtlas,
 		Database: "GGUser",
 		Collection: "QuestionReminder",
-	}*/
+	}
 
 	for _, event := range events {
 		log.Println("EVENT TYPE:",event.Type)
@@ -115,7 +117,13 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		case linebot.EventTypePostback:
 			switch event.Postback.Data{
 			case "remindTime":
+				registInfo := Model.User{LineId: event.Source.UserID, RemindTime: event.Postback.Params.Time}
+				record, err := mongo.InsertOneRecord(registInfo)
+				if err != nil {
+					bot.PushMessage(event.Source.UserID,linebot.NewTextMessage("設定時間失敗，請重新嘗試!"))
+				}
 				bot.PushMessage(event.Source.UserID, linebot.NewTextMessage(event.Source.UserID+"預定了每天"+event.Postback.Params.Time+"提醒填寫問卷!")).Do()
+				log.Println("Mongo insert info: ",record)
 			}
 		default:
 			bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("DEFAULT")).Do()
