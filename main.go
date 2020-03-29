@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/line/line-bot-sdk-go/linebot"
+	"github.com/mongodb/mongo-go-driver/mongo"
+	"github.com/weizhe0422/GGQuestionnaireReminder/DBUtil"
 	"log"
 	"net/http"
 	"os"
@@ -14,6 +16,12 @@ var groupID string
 
 func main() {
 	var err error
+
+	mongo.Connect(contect.)
+
+
+
+
 	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
 	log.Println("Bot:", bot, " err:", err)
 	http.HandleFunc("/callback", callbackHandler)
@@ -24,7 +32,6 @@ func main() {
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	events, err := bot.ParseRequest(r)
-
 	if err != nil {
 		if err == linebot.ErrInvalidSignature {
 			w.WriteHeader(400)
@@ -34,8 +41,16 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	mongo := &DBUtil.MongoDB{
+		URL: "mongodb+srv://gguser:true0422@cluster0-lpy0f.gcp.mongodb.net/test?retryWrites=true&w=majority",
+		Database: "GGUser",
+		Collection: "QuestionReminder",
+	}
+
 	for _, event := range events {
-		bot.PushMessage(event.Source.UserID,linebot.NewTextMessage("你在幹嘛？")).Do()
+		find, err := mongo.FindRecord("073300")
+		mongo.InsertOneRecord("073300")
+		bot.PushMessage(event.Source.UserID,linebot.NewTextMessage(fmt.Sprintf("找紀錄: %s / %v", find, err))).Do()
 		/*if event.Type == linebot.EventTypeMessage {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
