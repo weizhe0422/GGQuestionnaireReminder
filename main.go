@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/line/line-bot-sdk-go/linebot"
-	"github.com/weizhe0422/GGQuestionnaireReminder/DBUtil"
 	"log"
 	"net/http"
 	"os"
@@ -37,11 +36,11 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	mongo := &DBUtil.MongoDB{
+	/*mongo := &DBUtil.MongoDB{
 		URL: mongoAtlas,
 		Database: "GGUser",
 		Collection: "QuestionReminder",
-	}
+	}*/
 
 	for _, event := range events {
 		if event.Type == linebot.EventTypeMessage {
