@@ -8,3 +8,7 @@ type User struct {
 	LineId     string    `bson:"lineid"`
 	ClaimTime  time.Time `bson:"claimtime`
 }
+
+type User2 struct {
+	LineId     string    `bson:"lineid"`
+}

@@ -65,7 +65,7 @@ func (m *MongoDB) FindRecord(value string) (bool, error) {
 	collection := dbUtil.Database(m.Database).Collection(m.Collection)
 	ctx, _ := context.WithTimeout(context.Background(), 30 *time.Second)
 	filter := bson.M{"lineid": value}
-	err = collection.FindOne(ctx, filter).Decode(&Model.User{LineId:nil})
+	err = collection.FindOne(ctx, filter).Decode(&Model.User2{})
 	if err != nil {
 		log.Printf("failed to find: %v, value: %s", err, value)
 		return false, fmt.Errorf("failed to find: %v", err)
