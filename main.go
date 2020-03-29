@@ -35,7 +35,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, event := range events {
-		if event.Type == linebot.EventTypeMessage {
+		bot.PushMessage(event.Source.UserID,linebot.NewTextMessage("你在幹嘛？")).Do()
+		/*if event.Type == linebot.EventTypeMessage {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
 				log.Println(message.Text)
@@ -48,19 +49,16 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 							Contents: []linebot.FlexComponent{
 								&linebot.TextComponent{
 									Type:    linebot.FlexComponentTypeText,
-									Text: 	"防疫小幫手問卷",
+									Text: 	"防疫小幫手",
 								},
 								&linebot.TextComponent{
 									Type:    linebot.FlexComponentTypeText,
 									Text: 	"其他",
 								},
 							},
-							Flex:     nil,
-							Spacing:  "",
-							Margin:   "",
 						},
 					})).Do()
 			}
-		}
+		}*/
 	}
 }
