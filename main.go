@@ -41,18 +41,18 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				log.Println(message.Text)
 				bot.ReplyMessage(event.ReplyToken,
 					linebot.NewFlexMessage("你想設定什麼呢?", &linebot.BubbleContainer{
-						Type:linebot.FlexContainerTypeBubble,
+						Type:linebot.FlexContainerTypeCarousel,
 						Body:&linebot.BoxComponent{
-							Type:     linebot.FlexComponentTypeBox,
+							Type:     linebot.FlexComponentTypeButton,
 							Layout:   linebot.FlexBoxLayoutTypeHorizontal,
 							Contents: []linebot.FlexComponent{
 								&linebot.TextComponent{
 									Type:    linebot.FlexComponentTypeText,
 									Text: 	"防疫小幫手問卷",
 								},
-								&linebot.ButtonComponent{
-									Type:	linebot.FlexComponentTypeButton,
-									Style:	linebot.FlexButtonStyleTypeLink,
+								&linebot.TextComponent{
+									Type:    linebot.FlexComponentTypeText,
+									Text: 	"其他",
 								},
 							},
 							Flex:     nil,
