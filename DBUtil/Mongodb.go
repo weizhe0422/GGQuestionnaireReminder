@@ -37,7 +37,8 @@ func (m *MongoDB) InsertOneRecord(userInfo Model.User) (*mongo.InsertOneResult, 
 	if notExist, _ := m.FindRecord(userInfo.LineId); notExist {
 		//return nil, fmt.Errorf("already registed")
 		log.Println("already registed")
-		m.UpdateRecord(bson.M{"lineid": userInfo.LineId}, bson.M{"remindtime": userInfo.RemindTime, "claimtime": time.Now().Format("2005/01/02 03:04:05")})
+		m.UpdateRecord(bson.M{"lineid": userInfo.LineId},
+		               bson.M{"$set": bson.M{"remindtime": userInfo.RemindTime, "claimtime": time.Now().Format("2005/01/02 03:04:05")}})
 		return nil, nil
 	}
 
