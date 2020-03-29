@@ -12,7 +12,7 @@ var bot *linebot.Client
 
 var groupID string
 
-const mongoAtlas  = "mongodb+srv://gguser:true0422@cluster0-lpy0f.gcp.mongodb.net/test?retryWrites=true&w=majority"
+const mongoAtlas = "mongodb+srv://gguser:true0422@cluster0-lpy0f.gcp.mongodb.net/test?retryWrites=true&w=majority"
 
 func main() {
 	var err error
@@ -48,70 +48,66 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			case *linebot.TextMessage:
 				log.Println(message.Text)
 				/*bot.ReplyMessage(event.ReplyToken,
-					linebot.NewFlexMessage("你想設定什麼呢?", &linebot.BubbleContainer{
-						Type:linebot.FlexContainerTypeCarousel,
-						Body:&linebot.BoxComponent{
-							Type:     linebot.FlexComponentTypeButton,
-							Layout:   linebot.FlexBoxLayoutTypeHorizontal,
-							Contents: []linebot.FlexComponent{
-								&linebot.TextComponent{
-									Type:    linebot.FlexComponentTypeText,
-									Text: 	"防疫小幫手",
-								},
-								&linebot.TextComponent{
-									Type:    linebot.FlexComponentTypeText,
-									Text: 	"其他",
-								},
+				linebot.NewFlexMessage("你想設定什麼呢?", &linebot.BubbleContainer{
+					Type:linebot.FlexContainerTypeCarousel,
+					Body:&linebot.BoxComponent{
+						Type:     linebot.FlexComponentTypeButton,
+						Layout:   linebot.FlexBoxLayoutTypeHorizontal,
+						Contents: []linebot.FlexComponent{
+							&linebot.TextComponent{
+								Type:    linebot.FlexComponentTypeText,
+								Text: 	"防疫小幫手",
+							},
+							&linebot.TextComponent{
+								Type:    linebot.FlexComponentTypeText,
+								Text: 	"其他",
 							},
 						},
-					})).Do()*/
+					},
+				})).Do()*/
 				bot.ReplyMessage(event.ReplyToken,
 					linebot.NewFlexMessage("請問你想做什麼?",
-					&linebot.CarouselContainer{
-						Type:     linebot.FlexContainerTypeCarousel,
-						Contents: []*linebot.BubbleContainer{
-							{
-								Type:      linebot.FlexContainerTypeCarousel,
-								Size:      linebot.FlexBubbleSizeTypeMega,
-								Direction: linebot.FlexBubbleDirectionTypeRTL,
-								Header:    nil,
-								Hero:      &linebot.ImageComponent{
-									Type:            linebot.FlexComponentTypeImage,
-									URL:             "https://image.shutterstock.com/z/stock-photo-beautiful-park-with-big-pine-trees-lofty-tree-on-mountain-through-pine-forest-and-sunshine-autumn-1019660056.jpg",
-								},
-								Body:      &linebot.BoxComponent{
-									Type:     linebot.FlexComponentTypeBox,
-									Layout:   linebot.FlexBoxLayoutTypeVertical,
-									Contents: []linebot.FlexComponent{
-											&linebot.TextComponent{
-												Type:    linebot.FlexComponentTypeButton,
-												Text:    "填寫防疫問卷",
-											},
+						&linebot.CarouselContainer{
+							Type: linebot.FlexContainerTypeCarousel,
+							Contents: []*linebot.BubbleContainer{
+								{
+									Type:      linebot.FlexContainerTypeCarousel,
+									Size:      linebot.FlexBubbleSizeTypeMega,
+									Direction: linebot.FlexBubbleDirectionTypeRTL,
+									Header:    nil,
+									Hero: &linebot.ImageComponent{
+										Type: linebot.FlexComponentTypeImage,
+										URL:  "https://image.shutterstock.com/z/stock-photo-beautiful-park-with-big-pine-trees-lofty-tree-on-mountain-through-pine-forest-and-sunshine-autumn-1019660056.jpg",
 									},
-									Spacing:  "",
-									Margin:   "",
+									Body: &linebot.BoxComponent{
+										Type:   linebot.FlexComponentTypeBox,
+										Layout: linebot.FlexBoxLayoutTypeVertical,
+										Contents: []linebot.FlexComponent{
+											&linebot.TextComponent{
+											Text:    "防疫小幫手",
+										}},
+									},
+									Footer: &linebot.BoxComponent{
+										Type:   linebot.FlexComponentTypeBox,
+										Layout: linebot.FlexBoxLayoutTypeVertical,
+									},
+									Styles: nil,
 								},
-								Footer:    &linebot.BoxComponent{
-									Type:     linebot.FlexComponentTypeBox,
-									Layout:   linebot.FlexBoxLayoutTypeVertical,
+								{
+									Type:      linebot.FlexContainerTypeCarousel,
+									Size:      linebot.FlexBubbleSizeTypeGiga,
+									Direction: linebot.FlexBubbleDirectionTypeLTR,
+									Header:    nil,
+									Hero: &linebot.ImageComponent{
+										Type: linebot.FlexComponentTypeImage,
+										URL:  "https://image.shutterstock.com/z/stock-photo-beautiful-park-with-big-pine-trees-lofty-tree-on-mountain-through-pine-forest-and-sunshine-autumn-1019660056.jpg",
+									},
+									Body:   nil,
+									Footer: nil,
+									Styles: &linebot.BubbleStyle{},
 								},
-								Styles:    nil,
 							},
-							{
-								Type:      linebot.FlexContainerTypeCarousel,
-								Size:      linebot.FlexBubbleSizeTypeGiga,
-								Direction: linebot.FlexBubbleDirectionTypeLTR,
-								Header:    nil,
-								Hero:      &linebot.ImageComponent{
-									Type:            linebot.FlexComponentTypeImage,
-									URL:             "https://image.shutterstock.com/z/stock-photo-beautiful-park-with-big-pine-trees-lofty-tree-on-mountain-through-pine-forest-and-sunshine-autumn-1019660056.jpg",
-								},
-								Body:      nil,
-								Footer:    nil,
-								Styles:    &linebot.BubbleStyle{},
-							},
-						},
-					})).Do()
+						})).Do()
 			}
 		}
 	}
