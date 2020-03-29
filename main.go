@@ -72,16 +72,30 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 						Contents: []*linebot.BubbleContainer{
 							{
 								Type:      linebot.FlexContainerTypeCarousel,
-								Size:      linebot.FlexBubbleSizeTypeGiga,
-								Direction: linebot.FlexBubbleDirectionTypeLTR,
+								Size:      linebot.FlexBubbleSizeTypeMega,
+								Direction: linebot.FlexBubbleDirectionTypeRTL,
 								Header:    nil,
 								Hero:      &linebot.ImageComponent{
 									Type:            linebot.FlexComponentTypeImage,
 									URL:             "https://image.shutterstock.com/z/stock-photo-beautiful-park-with-big-pine-trees-lofty-tree-on-mountain-through-pine-forest-and-sunshine-autumn-1019660056.jpg",
 								},
-								Body:      nil,
-								Footer:    nil,
-								Styles:    &linebot.BubbleStyle{},
+								Body:      &linebot.BoxComponent{
+									Type:     linebot.FlexComponentTypeButton,
+									Layout:   linebot.FlexBoxLayoutTypeVertical,
+									Contents: []linebot.FlexComponent{
+											&linebot.TextComponent{
+												Type:    linebot.FlexComponentTypeButton,
+												Text:    "填寫防疫問卷",
+											},
+									},
+									Spacing:  "",
+									Margin:   "",
+								},
+								Footer:    &linebot.BoxComponent{
+									Type:     linebot.FlexComponentTypeBox,
+									Layout:   linebot.FlexBoxLayoutTypeVertical,
+								},
+								Styles:    nil,
 							},
 							{
 								Type:      linebot.FlexContainerTypeCarousel,
