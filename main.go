@@ -38,8 +38,14 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		if event.Type == linebot.EventTypeMessage {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
+				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+message.Text)).Do(); err != nil {
+					log.Print(err)
+				}
 				switch message.Text {
 				case "開始":
+					if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("你輸入了:"+message.Text)).Do(); err != nil {
+						log.Print(err)
+					}
 					bot.ReplyMessage(event.ReplyToken,
 						linebot.NewFlexMessage("你想設定什麼呢?", &linebot.BubbleContainer{
 							Type:linebot.FlexContainerTypeBubble,
@@ -61,10 +67,6 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 								Margin:   "",
 							},
 						}))
-				case "設定填問卷提醒時間":
-					if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+message.Text)).Do(); err != nil {
-						log.Print(err)
-					}
 				}
 			}
 		}
