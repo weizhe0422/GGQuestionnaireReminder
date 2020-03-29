@@ -42,8 +42,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, event := range events {
-		find, err := mongo.FindRecord("073300")
-		mongo.InsertOneRecord("073300")
+		//find, err := mongo.FindRecord("073300")
+		find, err :=mongo.InsertOneRecord("073300")
 		bot.PushMessage(event.Source.UserID,linebot.NewTextMessage(fmt.Sprintf("找紀錄: %s / %v", find, err))).Do()
 		/*if event.Type == linebot.EventTypeMessage {
 			switch message := event.Message.(type) {
