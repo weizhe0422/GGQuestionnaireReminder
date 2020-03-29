@@ -34,7 +34,7 @@ func (m *MongoDB) InsertOneRecord(value string) (*mongo.InsertOneResult, error){
 
 	collection := dbUtil.Database(m.Database).Collection(m.Collection)
 
-	if notExist, _ := m.FindRecord(value); !notExist {
+	if notExist, _ := m.FindRecord(value); notExist {
 		return nil, fmt.Errorf("already registed")
 	}
 
