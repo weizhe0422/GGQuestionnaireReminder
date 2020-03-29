@@ -12,8 +12,10 @@ var bot *linebot.Client
 
 var groupID string
 
-const mongoAtlas = "mongodb+srv://gguser:true0422@cluster0-lpy0f.gcp.mongodb.net/test?retryWrites=true&w=majority"
-
+const (
+	mongoAtlas = "mongodb+srv://gguser:true0422@cluster0-lpy0f.gcp.mongodb.net/test?retryWrites=true&w=majority"
+	surveycakeURL = "https://zh.surveymonkey.com/r/EmployeeHealthCheck?fbclid=IwAR2fKoFAYPEHxwhNpxIcgFXzWXylYGcVfVRuNPS88VpKwwKi_40cavQZYFU"
+)
 func main() {
 	var err error
 
@@ -77,7 +79,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 									Header:    nil,
 									Hero: &linebot.ImageComponent{
 										Type: linebot.FlexComponentTypeImage,
-										URL:  "https://images.pexels.com/photos/2587467/pexels-photo-2587467.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+										URL:  "https://images.pexels.com/photos/3073037/pexels-photo-3073037.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
 										Align: linebot.FlexComponentAlignTypeCenter,
 										Size: linebot.FlexImageSizeTypeFull,
 									},
@@ -87,7 +89,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 										Contents: []linebot.FlexComponent{
 											&linebot.ButtonComponent{
 												Type: linebot.FlexComponentTypeText,
-												Action: linebot.NewURIAction("yahoo","https://tw.yahoo.com/"),
+												Action: linebot.NewURIAction("防疫問卷",  surveycakeURL),
 											},
 										},
 									},
@@ -102,9 +104,11 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 									Hero: &linebot.ImageComponent{
 										Type: linebot.FlexComponentTypeImage,
 										URL:  "https://images.pexels.com/photos/981150/pexels-photo-981150.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+										Align: linebot.FlexComponentAlignTypeCenter,
+										Size: linebot.FlexImageSizeTypeFull,
 									},
 									Body: &linebot.BoxComponent{
-										Type:   linebot.FlexComponentTypeBox,
+										Type:   linebot.FlexComponentTypeButton,
 										Layout: linebot.FlexBoxLayoutTypeHorizontal,
 										Contents: []linebot.FlexComponent{
 											&linebot.TextComponent{
