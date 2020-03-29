@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 var bot *linebot.Client
@@ -49,24 +50,6 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
 				log.Println(message.Text)
-				/*bot.ReplyMessage(event.ReplyToken,
-				linebot.NewFlexMessage("你想設定什麼呢?", &linebot.BubbleContainer{
-					Type:linebot.FlexContainerTypeCarousel,
-					Body:&linebot.BoxComponent{
-						Type:     linebot.FlexComponentTypeButton,
-						Layout:   linebot.FlexBoxLayoutTypeHorizontal,
-						Contents: []linebot.FlexComponent{
-							&linebot.TextComponent{
-								Type:    linebot.FlexComponentTypeText,
-								Text: 	"防疫小幫手",
-							},
-							&linebot.TextComponent{
-								Type:    linebot.FlexComponentTypeText,
-								Text: 	"其他",
-							},
-						},
-					},
-				})).Do()*/
 				bot.ReplyMessage(event.ReplyToken,
 					linebot.NewFlexMessage("請問你想做什麼?",
 						&linebot.CarouselContainer{
@@ -87,6 +70,12 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 										Type:   linebot.FlexComponentTypeButton,
 										Layout: linebot.FlexBoxLayoutTypeVertical,
 										Contents: []linebot.FlexComponent{
+											&linebot.ButtonComponent{
+												Type: linebot.FlexComponentTypeFiller,
+												Action: linebot.NewDatetimePickerAction("選擇提醒時間", "remindTime",
+																						"time", time.Now().Format("2005-01-02t03:04"),
+																						"2018-01-24t23:59", time.Now().Format("2005-01-02t03:04")),
+											},
 											&linebot.ButtonComponent{
 												Type: linebot.FlexComponentTypeText,
 												Action: linebot.NewURIAction("防疫問卷",  surveycakeURL),
