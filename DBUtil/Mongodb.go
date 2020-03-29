@@ -67,6 +67,7 @@ func (m *MongoDB) FindRecord(value string) (bool, error) {
 	filter := bson.M{"lineid": value}
 	err = collection.FindOne(ctx, filter).Decode(&Model.User{})
 	if err != nil {
+		log.Printf("failed to find: %v, value: %s", err, value)
 		return false, fmt.Errorf("failed to find: %v", err)
 	}
 	return true, nil
