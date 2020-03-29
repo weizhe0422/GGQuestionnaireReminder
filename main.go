@@ -122,7 +122,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					bot.PushMessage(event.Source.UserID,linebot.NewTextMessage("設定時間失敗，請重新嘗試!"))
 				}
-				bot.PushMessage(event.Source.UserID, linebot.NewTextMessage(event.Source.UserID+"預定了每天"+event.Postback.Params.Time+"提醒填寫問卷!")).Do()
+				bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("預定了每天"+event.Postback.Params.Time+"提醒填寫問卷!")).Do()
 				log.Println("Mongo insert info: ",record)
 			}
 		default:
