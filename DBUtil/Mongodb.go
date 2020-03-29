@@ -36,7 +36,9 @@ func (m *MongoDB) InsertOneRecord(userInfo Model.User) (*mongo.InsertOneResult, 
 
 	if notExist, _ := m.FindRecord(userInfo.LineId); notExist {
 		//return nil, fmt.Errorf("already registed")
+		log.Println("already registed")
 		m.UpdateRecord(bson.M{"lineid": userInfo.LineId}, bson.M{"remindtime": userInfo.RemindTime, "claimtime": time.Now().Format("2005/01/02 03:04:05")})
+		return nil, nil
 	}
 
 	insertResult, err := collection.InsertOne(context.TODO(), bson.M{
@@ -79,6 +81,7 @@ func (m *MongoDB) UpdateRecord(filterInfo bson.M, newInfo bson.M) (bool, error) 
 	ctx, _ := context.WithTimeout(context.Background(), 30 *time.Second)
 	updateResult, err := collection.UpdateOne(ctx, filterInfo, newInfo)
 	if err != nil {
+		log.Printf("failed to update: %v", err)
 		return false, fmt.Errorf("failed to update: %v", err)
 	}
 	if updateResult.MatchedCount > 0 &&updateResult.ModifiedCount > 0 {
