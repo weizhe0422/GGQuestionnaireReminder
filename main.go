@@ -45,14 +45,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	}*/
 
 	for _, event := range events {
+		log.Println("EVENT TYPE:",event.Type)
 		switch event.Type {
-		case linebot.EventTypePostback:
-			switch event.Postback.Data{
-			case "storeId=12345":
-				bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("storeId=12345"))
-			case "storeId":
-				bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("storeId"))
-			}
 		case linebot.EventTypeMessage:
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
@@ -118,9 +112,15 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 							},
 						})).Do()
 			}
-		}
-		if event.Type == linebot.EventTypeMessage {
-
+		case linebot.EventTypePostback:
+			switch event.Postback.Data{
+			case "storeId=12345":
+				bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("storeId=12345")).Do()
+			case "storeId":
+				bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("storeId")).Do()
+			}
+		default:
+			bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("DEFAULT")).Do()
 		}
 	}
 }
