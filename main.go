@@ -41,33 +41,27 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+message.Text)).Do(); err != nil {
 					log.Print(err)
 				}
-				switch message.Text {
-				case "開始":
-					if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("你輸入了:"+message.Text)).Do(); err != nil {
-						log.Print(err)
-					}
-					bot.ReplyMessage(event.ReplyToken,
-						linebot.NewFlexMessage("你想設定什麼呢?", &linebot.BubbleContainer{
-							Type:linebot.FlexContainerTypeBubble,
-							Body:&linebot.BoxComponent{
-								Type:     linebot.FlexComponentTypeBox,
-								Layout:   linebot.FlexBoxLayoutTypeHorizontal,
-								Contents: []linebot.FlexComponent{
-									&linebot.TextComponent{
-										Type:    linebot.FlexComponentTypeText,
-										Text: 	"防疫小幫手問卷",
-									},
-									&linebot.TextComponent{
-										Type:    linebot.FlexComponentTypeText,
-										Text: 	"其他",
-									},
+				bot.ReplyMessage(event.ReplyToken,
+					linebot.NewFlexMessage("你想設定什麼呢?", &linebot.BubbleContainer{
+						Type:linebot.FlexContainerTypeBubble,
+						Body:&linebot.BoxComponent{
+							Type:     linebot.FlexComponentTypeBox,
+							Layout:   linebot.FlexBoxLayoutTypeHorizontal,
+							Contents: []linebot.FlexComponent{
+								&linebot.TextComponent{
+									Type:    linebot.FlexComponentTypeText,
+									Text: 	"防疫小幫手問卷",
 								},
-								Flex:     nil,
-								Spacing:  "",
-								Margin:   "",
+								&linebot.TextComponent{
+									Type:    linebot.FlexComponentTypeText,
+									Text: 	"其他",
+								},
 							},
-						}))
-				}
+							Flex:     nil,
+							Spacing:  "",
+							Margin:   "",
+						},
+					}))
 			}
 		}
 	}
