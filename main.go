@@ -77,7 +77,9 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 									Header:    nil,
 									Hero: &linebot.ImageComponent{
 										Type: linebot.FlexComponentTypeImage,
-										URL:  "https://image.shutterstock.com/z/stock-photo-beautiful-park-with-big-pine-trees-lofty-tree-on-mountain-through-pine-forest-and-sunshine-autumn-1019660056.jpg",
+										URL:  "https://images.pexels.com/photos/2587467/pexels-photo-2587467.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+										Align: linebot.FlexComponentAlignTypeCenter,
+										Size: linebot.FlexImageSizeTypeFull,
 									},
 									Body: &linebot.BoxComponent{
 										Type:   linebot.FlexComponentTypeButton,
@@ -99,7 +101,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 									Header:    nil,
 									Hero: &linebot.ImageComponent{
 										Type: linebot.FlexComponentTypeImage,
-										URL:  "https://image.shutterstock.com/z/stock-photo-beautiful-park-with-big-pine-trees-lofty-tree-on-mountain-through-pine-forest-and-sunshine-autumn-1019660056.jpg",
+										URL:  "https://images.pexels.com/photos/981150/pexels-photo-981150.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
 									},
 									Body: &linebot.BoxComponent{
 										Type:   linebot.FlexComponentTypeBox,
