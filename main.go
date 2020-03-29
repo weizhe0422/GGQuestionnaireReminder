@@ -73,8 +73,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 										Contents: []linebot.FlexComponent{
 											&linebot.ButtonComponent{
 												Type: linebot.FlexComponentTypeButton,
-												Action: linebot.NewDatetimePickerAction("設定提醒時間", "storeId=12345", "datetime",
-													"2020-03-29t22:00", "2021-03-29t22:00", "2020-03-29t22:00"),
+												Action: linebot.NewDatetimePickerAction("設定提醒時間", "remindTime", "time",
+													"07:00", "t24:00", "00:00"),
 											},
 											&linebot.ButtonComponent{
 												Type:   linebot.FlexComponentTypeButton,
@@ -114,10 +114,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		case linebot.EventTypePostback:
 			switch event.Postback.Data{
-			case "storeId=12345":
-				bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("storeId=12345")).Do()
-			case "storeId":
-				bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("storeId")).Do()
+			case "remindTime":
+				bot.PushMessage(event.Source.UserID, linebot.NewTextMessage(event.Postback.Data)).Do()
 			}
 		default:
 			bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("DEFAULT")).Do()
