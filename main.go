@@ -87,10 +87,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 											Text:    "防疫小幫手",
 										}},
 									},
-									Footer: &linebot.BoxComponent{
-										Type:   linebot.FlexComponentTypeBox,
-										Layout: linebot.FlexBoxLayoutTypeVertical,
-									},
+									Footer: nil,
 									Styles: nil,
 								},
 								{
