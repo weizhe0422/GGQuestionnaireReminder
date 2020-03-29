@@ -80,7 +80,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 									URL:             "https://image.shutterstock.com/z/stock-photo-beautiful-park-with-big-pine-trees-lofty-tree-on-mountain-through-pine-forest-and-sunshine-autumn-1019660056.jpg",
 								},
 								Body:      &linebot.BoxComponent{
-									Type:     linebot.FlexComponentTypeButton,
+									Type:     linebot.FlexComponentTypeBox,
 									Layout:   linebot.FlexBoxLayoutTypeVertical,
 									Contents: []linebot.FlexComponent{
 											&linebot.TextComponent{
