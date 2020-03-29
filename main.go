@@ -72,9 +72,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 										Contents: []linebot.FlexComponent{
 											&linebot.ButtonComponent{
 												Type: linebot.FlexComponentTypeFiller,
-												Action: linebot.NewDatetimePickerAction("選擇提醒時間", "remindTime",
-																						"time", time.Now().Format("2005-01-02t03:04"),
-																						"2018-01-24t23:59", time.Now().Format("2005-01-02t03:04")),
+												Action: linebot.NewDatetimePickerAction("選擇提醒時間", "remindTime","time",
+														time.Now().String(),time.Now().AddDate(1,0,0).String(),time.Now().String()),
 											},
 											&linebot.ButtonComponent{
 												Type: linebot.FlexComponentTypeText,
