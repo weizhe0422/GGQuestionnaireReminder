@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/line/line-bot-sdk-go/linebot"
-	"github.com/mongodb/mongo-go-driver/mongo"
 	"github.com/weizhe0422/GGQuestionnaireReminder/DBUtil"
 	"log"
 	"net/http"
@@ -16,11 +15,6 @@ var groupID string
 
 func main() {
 	var err error
-
-	mongo.Connect(contect.)
-
-
-
 
 	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
 	log.Println("Bot:", bot, " err:", err)
