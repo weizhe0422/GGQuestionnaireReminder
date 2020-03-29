@@ -38,9 +38,10 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		if event.Type == linebot.EventTypeMessage {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
-				if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+message.Text)).Do(); err != nil {
-					log.Print(err)
-				}
+				//if _, err = bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(message.ID+":"+message.Text)).Do(); err != nil {
+				//	log.Print(err)
+				//}
+				log.Println(message.Text)
 				bot.ReplyMessage(event.ReplyToken,
 					linebot.NewFlexMessage("你想設定什麼呢?", &linebot.BubbleContainer{
 						Type:linebot.FlexContainerTypeBubble,
