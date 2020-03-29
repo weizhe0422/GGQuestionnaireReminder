@@ -22,7 +22,7 @@ func (m *MongoDB) getMongoDB() (*mongo.Client, error) {
 	return mongo.Connect(ctx, options.Client().ApplyURI(m.URL))
 }
 
-func (m *MongoDB) InsertOneRecord(value string) (*mongo.InsertOneResult, error){
+func (m *MongoDB) InsertOneRecord(userInfo Model.User) (*mongo.InsertOneResult, error){
 	if m.URL  == "" {
 		return nil, fmt.Errorf("not set mongodb URL")
 	}
@@ -34,12 +34,13 @@ func (m *MongoDB) InsertOneRecord(value string) (*mongo.InsertOneResult, error){
 
 	collection := dbUtil.Database(m.Database).Collection(m.Collection)
 
-	if notExist, _ := m.FindRecord(value); notExist {
+	if notExist, _ := m.FindRecord(userInfo.NTAccount); notExist {
 		return nil, fmt.Errorf("already registed")
 	}
 
 	insertResult, err := collection.InsertOne(context.TODO(), bson.M{
-		"ntaccount": value,
+		"ntaccount": userInfo.NTAccount,
+		"remindtime": userInfo.RemindTime,
 	})
 	if err != nil {
 		log.Printf("failed to regist NT account: %v",err)

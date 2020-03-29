@@ -13,6 +13,8 @@ var bot *linebot.Client
 
 var groupID string
 
+const mongoAtlas  = "mongodb+srv://gguser:true0422@cluster0-lpy0f.gcp.mongodb.net/test?retryWrites=true&w=majority"
+
 func main() {
 	var err error
 
@@ -36,20 +38,17 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	mongo := &DBUtil.MongoDB{
-		URL: "mongodb+srv://gguser:true0422@cluster0-lpy0f.gcp.mongodb.net/test?retryWrites=true&w=majority",
+		URL: mongoAtlas,
 		Database: "GGUser",
 		Collection: "QuestionReminder",
 	}
 
 	for _, event := range events {
-		//find, err := mongo.FindRecord("073300")
-		find, err :=mongo.InsertOneRecord("073300")
-		bot.PushMessage(event.Source.UserID,linebot.NewTextMessage(fmt.Sprintf("找紀錄: %s / %v", find, err))).Do()
-		/*if event.Type == linebot.EventTypeMessage {
+		if event.Type == linebot.EventTypeMessage {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
 				log.Println(message.Text)
-				bot.ReplyMessage(event.ReplyToken,
+				/*bot.ReplyMessage(event.ReplyToken,
 					linebot.NewFlexMessage("你想設定什麼呢?", &linebot.BubbleContainer{
 						Type:linebot.FlexContainerTypeCarousel,
 						Body:&linebot.BoxComponent{
@@ -66,8 +65,41 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 								},
 							},
 						},
+					})).Do()*/
+				bot.ReplyMessage(event.ReplyToken,
+					linebot.NewFlexMessage("請問你想做什麼?",
+					&linebot.CarouselContainer{
+						Type:     linebot.FlexContainerTypeCarousel,
+						Contents: []*linebot.BubbleContainer{
+							{
+								Type:      linebot.FlexContainerTypeCarousel,
+								Size:      linebot.FlexBubbleSizeTypeGiga,
+								Direction: linebot.FlexBubbleDirectionTypeLTR,
+								Header:    nil,
+								Hero:      &linebot.ImageComponent{
+									Type:            linebot.FlexComponentTypeImage,
+									URL:             "https://image.shutterstock.com/z/stock-photo-beautiful-park-with-big-pine-trees-lofty-tree-on-mountain-through-pine-forest-and-sunshine-autumn-1019660056.jpg",
+								},
+								Body:      nil,
+								Footer:    nil,
+								Styles:    &linebot.BubbleStyle{},
+							},
+							{
+								Type:      linebot.FlexContainerTypeCarousel,
+								Size:      linebot.FlexBubbleSizeTypeGiga,
+								Direction: linebot.FlexBubbleDirectionTypeLTR,
+								Header:    nil,
+								Hero:      &linebot.ImageComponent{
+									Type:            linebot.FlexComponentTypeImage,
+									URL:             "https://image.shutterstock.com/z/stock-photo-beautiful-park-with-big-pine-trees-lofty-tree-on-mountain-through-pine-forest-and-sunshine-autumn-1019660056.jpg",
+								},
+								Body:      nil,
+								Footer:    nil,
+								Styles:    &linebot.BubbleStyle{},
+							},
+						},
 					})).Do()
 			}
-		}*/
+		}
 	}
 }
