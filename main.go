@@ -45,7 +45,15 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	}*/
 
 	for _, event := range events {
-		if event.Type == linebot.EventTypeMessage {
+		switch event.Type {
+		case linebot.EventTypePostback:
+			switch event.Postback.Data{
+			case "storeId=12345":
+				bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("storeId=12345"))
+			case "storeId":
+				bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("storeId"))
+			}
+		case linebot.EventTypeMessage:
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
 				log.Println(message.Text)
@@ -60,10 +68,10 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 									Direction: linebot.FlexBubbleDirectionTypeLTR,
 									Header:    nil,
 									Hero: &linebot.ImageComponent{
-										Type: linebot.FlexComponentTypeImage,
-										URL:  "https://images.pexels.com/photos/3073037/pexels-photo-3073037.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
+										Type:  linebot.FlexComponentTypeImage,
+										URL:   "https://images.pexels.com/photos/3073037/pexels-photo-3073037.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
 										Align: linebot.FlexComponentAlignTypeCenter,
-										Size: linebot.FlexImageSizeTypeFull,
+										Size:  linebot.FlexImageSizeTypeFull,
 									},
 									Body: &linebot.BoxComponent{
 										Type:   linebot.FlexComponentTypeButton,
@@ -71,12 +79,12 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 										Contents: []linebot.FlexComponent{
 											&linebot.ButtonComponent{
 												Type: linebot.FlexComponentTypeButton,
-												Action: linebot.NewDatetimePickerAction("設定提醒時間",  "storeId=12345", "datetime",
-													"2017-12-25t00:00","2018-01-24t23:59","2017-12-25t00:00"),
+												Action: linebot.NewDatetimePickerAction("設定提醒時間", "storeId=12345", "time",
+													"2020-03-29t22:00", "2021-03-29t22:00", "2020-03-29t22:00"),
 											},
 											&linebot.ButtonComponent{
-												Type: linebot.FlexComponentTypeButton,
-												Action: linebot.NewURIAction("防疫問卷",  surveycakeURL),
+												Type:   linebot.FlexComponentTypeButton,
+												Action: linebot.NewURIAction("防疫問卷", surveycakeURL),
 											},
 										},
 									},
@@ -89,10 +97,10 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 									Direction: linebot.FlexBubbleDirectionTypeLTR,
 									Header:    nil,
 									Hero: &linebot.ImageComponent{
-										Type: linebot.FlexComponentTypeImage,
-										URL:  "https://images.pexels.com/photos/981150/pexels-photo-981150.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+										Type:  linebot.FlexComponentTypeImage,
+										URL:   "https://images.pexels.com/photos/981150/pexels-photo-981150.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
 										Align: linebot.FlexComponentAlignTypeCenter,
-										Size: linebot.FlexImageSizeTypeFull,
+										Size:  linebot.FlexImageSizeTypeFull,
 									},
 									Body: &linebot.BoxComponent{
 										Type:   linebot.FlexComponentTypeButton,
@@ -110,6 +118,9 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 							},
 						})).Do()
 			}
+		}
+		if event.Type == linebot.EventTypeMessage {
+
 		}
 	}
 }
