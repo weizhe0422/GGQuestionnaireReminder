@@ -67,14 +67,16 @@ func PushAlarmMessage(){
 		remindtime,_:=time.ParseInLocation("2006-01-02 15:04",time.Now().Format("2006-01-02")+ " "+user.RemindTime,timeLoc)
 		log.Println("提醒時間:",remindtime)
 		log.Println("現在時間(上海):",time.Now().In(timeLoc))
-		if remindtime.After(time.Now().In(timeLoc)){
+		if remindtime.Before(time.Now().In(timeLoc)){
 			log.Println("開始發送提醒")
 			_, err := bot.PushMessage(user.LineId, linebot.NewTextMessage("記得去填問卷啊！"+surveycakeURL)).Do()
 			if err != nil {
 				log.Printf("推送提提醒給%s失敗:%v",user.LineId,err)
 				continue
 			}
-			log.Printf("推送提提醒給%s失敗",user.LineId)
+			log.Printf("推送提提醒給%s成功",user.LineId)
+		}else{
+			log.Printf("%s尚未到提醒時間%s",user.LineId,user.RemindTime)
 		}
 		log.Println("結束檢查")
 	}
