@@ -11,4 +11,5 @@ type User struct {
 
 type User2 struct {
 	LineId     string    `bson:"lineid"`
+	RemindTime string    `bson:"remindtime"`
 }

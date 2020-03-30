@@ -56,6 +56,23 @@ func (m *MongoDB) InsertOneRecord(userInfo Model.User) (*mongo.InsertOneResult, 
 	return insertResult, nil
 }
 
+func (m *MongoDB) FindAllRecord() (*mongo.Cursor, error) {
+	dbUtil, _ := m.getMongoDB()
+	err := dbUtil.Ping(context.TODO(), nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to ping mongoDB: %v", err)
+	}
+	collection := dbUtil.Database(m.Database).Collection(m.Collection)
+	ctx, _ := context.WithTimeout(context.Background(), 30 *time.Second)
+	findAllResult, err := collection.Find(ctx, bson.D{})
+	if err != nil {
+		log.Printf("failed to find: %v", err)
+		return nil, fmt.Errorf("failed to find: %v", err)
+	}
+
+	return findAllResult, nil
+}
+
 func (m *MongoDB) FindRecord(value string) (bool, error) {
 	dbUtil, _ := m.getMongoDB()
 	err := dbUtil.Ping(context.TODO(), nil)

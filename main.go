@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"github.com/line/line-bot-sdk-go/linebot"
 	"github.com/weizhe0422/GGQuestionnaireReminder/DBUtil"
@@ -8,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 var bot *linebot.Client
@@ -24,9 +26,45 @@ func main() {
 	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
 	log.Println("Bot:", bot, " err:", err)
 	http.HandleFunc("/callback", callbackHandler)
+
+	go func(){
+		for{
+			PushAlarmMessage()
+			time.Sleep(10*time.Minute)
+		}
+	}()
+
 	port := os.Getenv("PORT")
 	addr := fmt.Sprintf(":%s", port)
 	http.ListenAndServe(addr, nil)
+}
+
+func PushAlarmMessage(){
+	mongo := &DBUtil.MongoDB{
+		URL: mongoAtlas,
+		Database: "GGUser",
+		Collection: "QuestionReminder",
+	}
+
+	allRecord, err := mongo.FindAllRecord()
+	if err != nil {
+		log.Printf("failed to get all record: %v", err)
+		return
+	}
+
+	timeLoc, _ := time.LoadLocation("Local")
+	for allRecord.Next(context.TODO()) {
+		var user Model.User2
+		err := allRecord.Decode(&user)
+		if err != nil {
+			log.Printf("failed to decode: %v", err)
+			continue
+		}
+		remindtime,_:=time.ParseInLocation("2006-01-02 15:04",time.Now().Format("2006-01-02")+ " "+user.RemindTime,timeLoc)
+		if remindtime.After(time.Now()){
+			bot.PushMessage(user.LineId,linebot.NewTextMessage("記得去填問卷啊！"+surveycakeURL))
+		}
+	}
 }
 
 func callbackHandler(w http.ResponseWriter, r *http.Request) {
