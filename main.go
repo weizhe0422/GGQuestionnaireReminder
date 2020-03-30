@@ -75,19 +75,22 @@ func PushAlarmMessage() {
 		_, rMonth, rDay := remindtime.Date()
 		log.Printf("上次提醒時間:%v", lastRemindTime)
 
-		if remindtime.Before(time.Now().In(timeLoc)) &&
-			((lMonth == rMonth && lDay < rDay) || (lMonth != rMonth)) {
-			log.Println("開始發送提醒")
-			_, err := bot.PushMessage(user.LineId, linebot.NewTextMessage("記得去填問卷啊！"+surveycakeURL)).Do()
-			if err != nil {
-				log.Printf("推送提提醒給%s失敗:%v", user.LineId, err)
-				continue
-			}
+		if remindtime.Before(time.Now().In(timeLoc)) {
+			if (lMonth == rMonth && lDay < rDay) || (lMonth != rMonth){
+				log.Printf("今天已經提醒過:%v，時間是:%s",user.LineId,user.LastRemindTime)
+			}else{
+				log.Println("開始發送提醒")
+				_, err := bot.PushMessage(user.LineId, linebot.NewTextMessage("記得去填問卷啊！"+surveycakeURL)).Do()
+				if err != nil {
+					log.Printf("推送提提醒給%s失敗:%v", user.LineId, err)
+					continue
+				}
 
-			log.Printf("推送提提醒給%s成功", user.LineId)
-			_, err = mongo.UpdateRecord(bson.M{"lineid": user.LineId}, bson.M{"$set": bson.M{"lastremindtime": time.Now().Format("2005/01/02 03:04:05")}})
-			if err != nil {
-				log.Printf("更新提醒時間失敗:%v", err)
+				log.Printf("推送提提醒給%s成功", user.LineId)
+				_, err = mongo.UpdateRecord(bson.M{"lineid": user.LineId}, bson.M{"$set": bson.M{"lastremindtime": time.Now().Format("2005/01/02 03:04:05")}})
+				if err != nil {
+					log.Printf("更新提醒時間失敗:%v", err)
+				}
 			}
 		} else {
 			log.Printf("%s尚未到提醒時間%s", user.LineId, user.RemindTime)
