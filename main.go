@@ -54,7 +54,7 @@ func PushAlarmMessage(){
 		return
 	}
 
-	timeLoc, _ := time.LoadLocation("Local")
+	timeLoc, _ := time.LoadLocation("Asia/Shanghai")
 	for allRecord.Next(context.TODO()) {
 		log.Println("開始檢查")
 		var user Model.User2
@@ -66,8 +66,8 @@ func PushAlarmMessage(){
 		}
 		remindtime,_:=time.ParseInLocation("2006-01-02 15:04",time.Now().Format("2006-01-02")+ " "+user.RemindTime,timeLoc)
 		log.Println("提醒時間:",remindtime)
-		log.Println("現在時間:",time.Now())
-		if remindtime.After(time.Now()){
+		log.Println("現在時間(上海):",time.Now().In(timeLoc))
+		if remindtime.After(time.Now().In(timeLoc)){
 			bot.PushMessage(user.LineId,linebot.NewTextMessage("記得去填問卷啊！"+surveycakeURL))
 		}
 		log.Println("結束檢查")
