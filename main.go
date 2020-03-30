@@ -29,8 +29,10 @@ func main() {
 
 	go func(){
 		for{
+			log.Println("開始提醒")
 			PushAlarmMessage()
-			time.Sleep(10*time.Minute)
+			log.Println("結束提醒")
+			time.Sleep(3*time.Minute)
 		}
 	}()
 
@@ -54,16 +56,21 @@ func PushAlarmMessage(){
 
 	timeLoc, _ := time.LoadLocation("Local")
 	for allRecord.Next(context.TODO()) {
+		log.Println("開始檢查")
 		var user Model.User2
 		err := allRecord.Decode(&user)
+		log.Println("ID:",user.LineId,"設定時間:",user.RemindTime)
 		if err != nil {
 			log.Printf("failed to decode: %v", err)
 			continue
 		}
 		remindtime,_:=time.ParseInLocation("2006-01-02 15:04",time.Now().Format("2006-01-02")+ " "+user.RemindTime,timeLoc)
+		log.Println("提醒時間:",remindtime)
+		log.Println("現在時間:",time.Now())
 		if remindtime.After(time.Now()){
 			bot.PushMessage(user.LineId,linebot.NewTextMessage("記得去填問卷啊！"+surveycakeURL))
 		}
+		log.Println("結束檢查")
 	}
 }
 
