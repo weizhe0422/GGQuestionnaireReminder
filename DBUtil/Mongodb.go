@@ -47,6 +47,7 @@ func (m *MongoDB) InsertOneRecord(userInfo Model.User) (*mongo.InsertOneResult, 
 		"remindtime": userInfo.RemindTime,
 		"lineid":userInfo.LineId,
 		"claimtime": time.Now().Format("2005/01/02 03:04:05"),
+		"lastremindtime":"",
 	})
 	if err != nil {
 		log.Printf("failed to regist NT account: %v",err)
