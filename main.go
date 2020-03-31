@@ -85,7 +85,7 @@ func PushAlarmMessage() {
 			_, err = mongo.UpdateRecord(bson.M{"lineid": user.LineId},
 										bson.M{"$set": bson.M{"lastremindtime": time.Now().In(timeLoc),
 											                   "remindtime": time.Date(tomorrow.Year(), tomorrow.Month(), tomorrow.Day(),
-																   user.RemindTime.Hour(),user.RemindTime.Minute(),0,0,timeLoc)}})
+																   user.RemindTime.Hour()+8,user.RemindTime.Minute(),0,0,timeLoc)}})
 			if err != nil {
 				log.Printf("更新提醒時間失敗:%v", err)
 			}
