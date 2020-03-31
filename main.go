@@ -81,7 +81,9 @@ func PushAlarmMessage() {
 			}
 
 			log.Printf("推送提提醒給%s成功", user.LineId)
-			_, err = mongo.UpdateRecord(bson.M{"lineid": user.LineId}, bson.M{"$set": bson.M{"lastremindtime": time.Now().In(timeLoc)}})
+			_, err = mongo.UpdateRecord(bson.M{"lineid": user.LineId},
+										bson.M{"$set": bson.M{"lastremindtime": time.Now().In(timeLoc),
+											                   "remindtime": time.Now().AddDate(0,0,1).In(timeLoc)}})
 			if err != nil {
 				log.Printf("更新提醒時間失敗:%v", err)
 			}
