@@ -34,6 +34,7 @@ func (m *MongoDB) InsertOneRecord(userInfo Model.User) (*mongo.InsertOneResult, 
 
 	collection := dbUtil.Database(m.Database).Collection(m.Collection)
 
+	timeLoc, _ := time.LoadLocation("Asia/Shanghai")
 	if notExist, _ := m.FindRecord(userInfo.LineId); notExist {
 		//return nil, fmt.Errorf("already registed")
 		log.Println("already registed")
@@ -42,12 +43,13 @@ func (m *MongoDB) InsertOneRecord(userInfo Model.User) (*mongo.InsertOneResult, 
 		return nil, nil
 	}
 
+
 	insertResult, err := collection.InsertOne(context.TODO(), bson.M{
 		"ntaccount": userInfo.NTAccount,
 		"remindtime": userInfo.RemindTime,
 		"lineid":userInfo.LineId,
-		"claimtime": time.Now(),
-		"lastremindtime":time.Now(),
+		"claimtime": time.Now().In(timeLoc),
+		"lastremindtime":time.Now().In(timeLoc),
 	})
 	if err != nil {
 		log.Printf("failed to regist NT account: %v",err)

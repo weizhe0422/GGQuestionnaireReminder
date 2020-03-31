@@ -67,33 +67,26 @@ func PushAlarmMessage() {
 			log.Printf("failed to decode: %v", err)
 			continue
 		}
-		log.Println("提醒時間:", user.RemindTime)
+		log.Println("提醒時間:", user.RemindTime.In(timeLoc))
 		log.Println("現在時間(上海):", time.Now().In(timeLoc))
 
-		lastRemindTime := user.LastRemindTime
-		_, lMonth, lDay := lastRemindTime.Date()
-		_, rMonth, rDay := user.RemindTime.Date()
-		log.Printf("上次提醒時間:%v", lastRemindTime)
+		log.Printf("上次提醒時間:%v", user.LastRemindTime.In(timeLoc))
 
-		if user.RemindTime.Before(time.Now().In(timeLoc)) {
-			if (lMonth == rMonth && lDay < rDay) || (lMonth != rMonth){
-				log.Println("開始發送提醒")
-				_, err := bot.PushMessage(user.LineId, linebot.NewTextMessage("記得去填問卷啊！"+surveycakeURL)).Do()
-				if err != nil {
-					log.Printf("推送提提醒給%s失敗:%v", user.LineId, err)
-					continue
-				}
+		if user.RemindTime.In(timeLoc).Before(time.Now().In(timeLoc)) {
+			log.Println("開始發送提醒")
+			_, err := bot.PushMessage(user.LineId, linebot.NewTextMessage("記得去填問卷啊！"+surveycakeURL)).Do()
+			if err != nil {
+				log.Printf("推送提提醒給%s失敗:%v", user.LineId, err)
+				continue
+			}
 
-				log.Printf("推送提提醒給%s成功", user.LineId)
-				_, err = mongo.UpdateRecord(bson.M{"lineid": user.LineId}, bson.M{"$set": bson.M{"lastremindtime": time.Now()}})
-				if err != nil {
-					log.Printf("更新提醒時間失敗:%v", err)
-				}
-			}else{
-				log.Printf("今天已經提醒過:%v，時間是:%s",user.LineId,user.LastRemindTime)
+			log.Printf("推送提提醒給%s成功", user.LineId)
+			_, err = mongo.UpdateRecord(bson.M{"lineid": user.LineId}, bson.M{"$set": bson.M{"lastremindtime": time.Now().In(timeLoc)}})
+			if err != nil {
+				log.Printf("更新提醒時間失敗:%v", err)
 			}
 		} else {
-			log.Printf("%s尚未到提醒時間%s", user.LineId, user.RemindTime)
+			log.Printf("%s尚未到提醒時間%s", user.LineId, user.RemindTime.In(timeLoc))
 		}
 		log.Println("結束檢查")
 	}
@@ -187,7 +180,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		case linebot.EventTypePostback:
 			switch event.Postback.Data {
 			case "remindTime"://event.Postback.Params.Time
-				tomorrow := time.Now().AddDate(0,0,1)
+				tomorrow := time.Now().AddDate(0,0,0)
 				setHour,_ := strconv.Atoi(event.Postback.Params.Time[0:2])
 				setMin,_ := strconv.Atoi(event.Postback.Params.Time[3:5])
 				registInfo := Model.User{LineId: event.Source.UserID,
