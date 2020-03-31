@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -66,16 +67,15 @@ func PushAlarmMessage() {
 			log.Printf("failed to decode: %v", err)
 			continue
 		}
-		remindtime, _ := time.ParseInLocation("2006-01-02 15:04", time.Now().Format("2006-01-02")+" "+user.RemindTime, timeLoc)
-		log.Println("提醒時間:", remindtime)
+		log.Println("提醒時間:", user.RemindTime)
 		log.Println("現在時間(上海):", time.Now().In(timeLoc))
 
 		lastRemindTime := user.LastRemindTime
 		_, lMonth, lDay := lastRemindTime.Date()
-		_, rMonth, rDay := remindtime.Date()
+		_, rMonth, rDay := user.RemindTime.Date()
 		log.Printf("上次提醒時間:%v", lastRemindTime)
 
-		if remindtime.Before(time.Now().In(timeLoc)) {
+		if user.RemindTime.Before(time.Now().In(timeLoc)) {
 			if (lMonth == rMonth && lDay < rDay) || (lMonth != rMonth){
 				log.Println("開始發送提醒")
 				_, err := bot.PushMessage(user.LineId, linebot.NewTextMessage("記得去填問卷啊！"+surveycakeURL)).Do()
@@ -186,8 +186,15 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		case linebot.EventTypePostback:
 			switch event.Postback.Data {
-			case "remindTime":
-				registInfo := Model.User{LineId: event.Source.UserID, RemindTime: event.Postback.Params.Time}
+			case "remindTime"://event.Postback.Params.Time
+				tomorrow := time.Now().AddDate(0,0,1)
+				setHour,_ := strconv.Atoi(event.Postback.Params.Time[0:2])
+				setMin,_ := strconv.Atoi(event.Postback.Params.Time[3:5])
+				registInfo := Model.User{LineId: event.Source.UserID,
+										 RemindTime: time.Date(tomorrow.Year(), tomorrow.Month(), tomorrow.Day(),
+										 						setHour,setMin,0,0,time.Now().Location())}
+				log.Println("設定時間:",time.Date(tomorrow.Year(), tomorrow.Month(), tomorrow.Day(),
+					setHour,setMin,0,0,time.Now().Location()))
 				record, err := mongo.InsertOneRecord(registInfo)
 				if err != nil {
 					bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("設定時間失敗，請重新嘗試!"))

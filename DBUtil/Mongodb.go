@@ -38,7 +38,7 @@ func (m *MongoDB) InsertOneRecord(userInfo Model.User) (*mongo.InsertOneResult, 
 		//return nil, fmt.Errorf("already registed")
 		log.Println("already registed")
 		m.UpdateRecord(bson.M{"lineid": userInfo.LineId},
-		               bson.M{"$set": bson.M{"remindtime": userInfo.RemindTime, "claimtime": time.Now().Format("2005/01/02 03:04:05")}})
+		               bson.M{"$set": bson.M{"remindtime": userInfo.RemindTime, "claimtime": time.Now()}})
 		return nil, nil
 	}
 
@@ -46,7 +46,7 @@ func (m *MongoDB) InsertOneRecord(userInfo Model.User) (*mongo.InsertOneResult, 
 		"ntaccount": userInfo.NTAccount,
 		"remindtime": userInfo.RemindTime,
 		"lineid":userInfo.LineId,
-		"claimtime": time.Now().Format("2005/01/02 03:04:05"),
+		"claimtime": time.Now(),
 		"lastremindtime":time.Now(),
 	})
 	if err != nil {
