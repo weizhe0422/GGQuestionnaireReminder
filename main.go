@@ -183,9 +183,10 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				tomorrow := time.Now().AddDate(0,0,0)
 				setHour,_ := strconv.Atoi(event.Postback.Params.Time[0:2])
 				setMin,_ := strconv.Atoi(event.Postback.Params.Time[3:5])
+				timeLoc, _ := time.LoadLocation("Asia/Shanghai")
 				registInfo := Model.User{LineId: event.Source.UserID,
 										 RemindTime: time.Date(tomorrow.Year(), tomorrow.Month(), tomorrow.Day(),
-										 						setHour,setMin,0,0,time.Now().Location())}
+										 						setHour,setMin,0,0,timeLoc)}
 				log.Println("設定時間:",time.Date(tomorrow.Year(), tomorrow.Month(), tomorrow.Day(),
 					setHour,setMin,0,0,time.Now().Location()))
 				record, err := mongo.InsertOneRecord(registInfo)
