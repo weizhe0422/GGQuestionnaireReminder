@@ -70,7 +70,7 @@ func PushAlarmMessage() {
 		log.Println("提醒時間:", remindtime)
 		log.Println("現在時間(上海):", time.Now().In(timeLoc))
 
-		lastRemindTime, _ := time.ParseInLocation("2005/01/02", user.LastRemindTime, timeLoc)
+		lastRemindTime := user.LastRemindTime
 		_, lMonth, lDay := lastRemindTime.Date()
 		_, rMonth, rDay := remindtime.Date()
 		log.Printf("上次提醒時間:%v", lastRemindTime)
@@ -85,7 +85,7 @@ func PushAlarmMessage() {
 				}
 
 				log.Printf("推送提提醒給%s成功", user.LineId)
-				_, err = mongo.UpdateRecord(bson.M{"lineid": user.LineId}, bson.M{"$set": bson.M{"lastremindtime": time.Now().Format("2005/01/02 03:04:05")}})
+				_, err = mongo.UpdateRecord(bson.M{"lineid": user.LineId}, bson.M{"$set": bson.M{"lastremindtime": time.Now()}})
 				if err != nil {
 					log.Printf("更新提醒時間失敗:%v", err)
 				}

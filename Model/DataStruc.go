@@ -7,11 +7,11 @@ type User struct {
 	RemindTime     string    `bson:"remindtime"`
 	LineId         string    `bson:"lineid"`
 	ClaimTime      time.Time `bson:"claimtime`
-	LastRemindTime string    `bson:"lastremindtime"`
+	LastRemindTime time.Time    `bson:"lastremindtime"`
 }
 
 type User2 struct {
 	LineId         string `bson:"lineid"`
 	RemindTime     string `bson:"remindtime"`
-	LastRemindTime string `bson:"lastremindtime"`
+	LastRemindTime time.Time `bson:"lastremindtime"`
 }
