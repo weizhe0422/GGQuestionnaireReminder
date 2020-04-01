@@ -154,6 +154,34 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 									Header:    nil,
 									Hero: &linebot.ImageComponent{
 										Type:  linebot.FlexComponentTypeImage,
+										URL: imageURLPage2[rand.Intn(5)],
+										Align: linebot.FlexComponentAlignTypeCenter,
+										Size:  linebot.FlexImageSizeTypeFull,
+									},
+									Body: &linebot.BoxComponent{
+										Type:   linebot.FlexComponentTypeButton,
+										Layout: linebot.FlexBoxLayoutTypeHorizontal,
+										Contents: []linebot.FlexComponent{
+											&linebot.TextComponent{
+												Type: linebot.FlexComponentTypeText,
+												Text: "溫馨提醒：",
+											},
+											&linebot.TextComponent{
+												Type: linebot.FlexComponentTypeText,
+												Text: "有新版員工自主健康聲明書(ver. 20200319)要填寫！",
+											},
+										},
+									},
+									Footer: nil,
+									Styles: &linebot.BubbleStyle{},
+								},
+								{
+									Type:      linebot.FlexContainerTypeCarousel,
+									Size:      linebot.FlexBubbleSizeTypeGiga,
+									Direction: linebot.FlexBubbleDirectionTypeLTR,
+									Header:    nil,
+									Hero: &linebot.ImageComponent{
+										Type:  linebot.FlexComponentTypeImage,
 										URL:   imageURLPage1[rand.Intn(5)],
 										Align: linebot.FlexComponentAlignTypeCenter,
 										Size:  linebot.FlexImageSizeTypeFull,
@@ -173,31 +201,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 											},
 											&linebot.ButtonComponent{
 												Type:   linebot.FlexComponentTypeButton,
-												Action: linebot.NewURIAction("員工自主健康聲明書(ver. 20200319)", healthydeclareURL),
-											},
-										},
-									},
-									Footer: nil,
-									Styles: &linebot.BubbleStyle{},
-								},
-								{
-									Type:      linebot.FlexContainerTypeCarousel,
-									Size:      linebot.FlexBubbleSizeTypeGiga,
-									Direction: linebot.FlexBubbleDirectionTypeLTR,
-									Header:    nil,
-									Hero: &linebot.ImageComponent{
-										Type:  linebot.FlexComponentTypeImage,
-										URL: imageURLPage2[rand.Intn(5)],
-										Align: linebot.FlexComponentAlignTypeCenter,
-										Size:  linebot.FlexImageSizeTypeFull,
-									},
-									Body: &linebot.BoxComponent{
-										Type:   linebot.FlexComponentTypeButton,
-										Layout: linebot.FlexBoxLayoutTypeHorizontal,
-										Contents: []linebot.FlexComponent{
-											&linebot.TextComponent{
-												Type: linebot.FlexComponentTypeText,
-												Text: fmt.Sprintln("溫馨提醒：")+fmt.Sprintln("有新版員工自主健康聲明書(ver. 20200319)要填寫！"),
+												Action: linebot.NewURIAction("填寫 '員工自主健康聲明書(ver. 20200319)' ", healthydeclareURL),
 											},
 										},
 									},
