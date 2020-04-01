@@ -8,6 +8,7 @@ import (
 	"github.com/weizhe0422/GGQuestionnaireReminder/Model"
 	"go.mongodb.org/mongo-driver/bson"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"strconv"
@@ -23,9 +24,25 @@ const (
 	surveycakeURL = "https://zh.surveymonkey.com/r/EmployeeHealthCheck?fbclid=IwAR2fKoFAYPEHxwhNpxIcgFXzWXylYGcVfVRuNPS88VpKwwKi_40cavQZYFU"
 	healthydeclareURL = "https://zh.surveymonkey.com/r/EmployeeHealthDeclarationForm"
 )
+var imageURLPage1,imageURLPage2 []string
 
 func main() {
 	var err error
+
+	imageURLPage1 = []string{
+		"https://images.pexels.com/photos/307008/pexels-photo-307008.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+		"https://images.pexels.com/photos/919606/pexels-photo-919606.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+		"https://images.pexels.com/photos/3733341/pexels-photo-3733341.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+		"https://images.pexels.com/photos/3992952/pexels-photo-3992952.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+		"https://images.pexels.com/photos/3873197/pexels-photo-3873197.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+	}
+	imageURLPage2 = []string{
+		"https://images.pexels.com/photos/3952231/pexels-photo-3952231.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+		"https://images.pexels.com/photos/3987146/pexels-photo-3987146.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+		"https://images.pexels.com/photos/981150/pexels-photo-981150.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+		"https://images.pexels.com/photos/3957987/pexels-photo-3957987.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
+		"https://images.pexels.com/photos/3902732/pexels-photo-3902732.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
+	}
 
 	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
 	log.Println("Bot:", bot, " err:", err)
@@ -119,6 +136,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 
 	for _, event := range events {
 		log.Println("EVENT TYPE:", event.Type)
+		rand.Seed(time.Now().UnixNano())
 		switch event.Type {
 		case linebot.EventTypeMessage:
 			switch message := event.Message.(type) {
@@ -136,7 +154,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 									Header:    nil,
 									Hero: &linebot.ImageComponent{
 										Type:  linebot.FlexComponentTypeImage,
-										URL:   "https://images.pexels.com/photos/307008/pexels-photo-307008.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+										URL:   imageURLPage1[rand.Intn(5)],
 										Align: linebot.FlexComponentAlignTypeCenter,
 										Size:  linebot.FlexImageSizeTypeFull,
 									},
@@ -169,7 +187,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 									Header:    nil,
 									Hero: &linebot.ImageComponent{
 										Type:  linebot.FlexComponentTypeImage,
-										URL:   "https://images.pexels.com/photos/981150/pexels-photo-981150.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+										URL: imageURLPage2[rand.Intn(5)],
 										Align: linebot.FlexComponentAlignTypeCenter,
 										Size:  linebot.FlexImageSizeTypeFull,
 									},
