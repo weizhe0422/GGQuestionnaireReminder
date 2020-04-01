@@ -21,6 +21,7 @@ var groupID string
 const (
 	mongoAtlas    = "mongodb+srv://gguser:true0422@cluster0-lpy0f.gcp.mongodb.net/test?retryWrites=true&w=majority"
 	surveycakeURL = "https://zh.surveymonkey.com/r/EmployeeHealthCheck?fbclid=IwAR2fKoFAYPEHxwhNpxIcgFXzWXylYGcVfVRuNPS88VpKwwKi_40cavQZYFU"
+	healthydeclareURL = "https://zh.surveymonkey.com/r/EmployeeHealthDeclarationForm"
 )
 
 func main() {
@@ -135,7 +136,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 									Header:    nil,
 									Hero: &linebot.ImageComponent{
 										Type:  linebot.FlexComponentTypeImage,
-										URL:   "https://images.pexels.com/photos/3073037/pexels-photo-3073037.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
+										URL:   "https://images.pexels.com/photos/307008/pexels-photo-307008.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
 										Align: linebot.FlexComponentAlignTypeCenter,
 										Size:  linebot.FlexImageSizeTypeFull,
 									},
@@ -151,6 +152,10 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 											&linebot.ButtonComponent{
 												Type:   linebot.FlexComponentTypeButton,
 												Action: linebot.NewURIAction("防疫問卷", surveycakeURL),
+											},
+											&linebot.ButtonComponent{
+												Type:   linebot.FlexComponentTypeButton,
+												Action: linebot.NewURIAction("員工自主健康聲明書(ver. 20200319)", healthydeclareURL),
 											},
 										},
 									},
@@ -174,7 +179,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 										Contents: []linebot.FlexComponent{
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
-												Text: "Hello,",
+												Text: "溫馨提醒：\r\n 有新版員工自主健康聲明書(ver. 20200319)要填寫！",
 											},
 										},
 									},
