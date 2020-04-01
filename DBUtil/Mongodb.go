@@ -12,8 +12,8 @@ import (
 )
 
 type MongoDB struct {
-	URL string
-	Database string
+	URL        string
+	Database   string
 	Collection string
 }
 
@@ -22,8 +22,8 @@ func (m *MongoDB) getMongoDB() (*mongo.Client, error) {
 	return mongo.Connect(ctx, options.Client().ApplyURI(m.URL))
 }
 
-func (m *MongoDB) InsertOneRecord(userInfo Model.User) (*mongo.InsertOneResult, error){
-	if m.URL  == "" {
+func (m *MongoDB) InsertOneRecord(userInfo Model.User) (*mongo.InsertOneResult, error) {
+	if m.URL == "" {
 		return nil, fmt.Errorf("not set mongodb URL")
 	}
 	dbUtil, _ := m.getMongoDB()
@@ -39,20 +39,22 @@ func (m *MongoDB) InsertOneRecord(userInfo Model.User) (*mongo.InsertOneResult, 
 		//return nil, fmt.Errorf("already registed")
 		log.Println("already registed")
 		m.UpdateRecord(bson.M{"lineid": userInfo.LineId},
-		               bson.M{"$set": bson.M{"remindtime": userInfo.RemindTime.In(timeLoc), "claimtime": time.Now().In(timeLoc)}})
+			bson.M{"$set": bson.M{"settingremindtime": userInfo.SettingRemindTime,
+				"nextremindtime": userInfo.NextRemindTime,
+				"claimtime":      time.Now().In(timeLoc)}})
 		return nil, nil
 	}
 
-
 	insertResult, err := collection.InsertOne(context.TODO(), bson.M{
-		"ntaccount": userInfo.NTAccount,
-		"remindtime": userInfo.RemindTime,
-		"lineid":userInfo.LineId,
-		"claimtime": time.Now().In(timeLoc),
-		"lastremindtime":time.Now().In(timeLoc),
+		"ntaccount":         userInfo.NTAccount,
+		"settingremindtime": userInfo.SettingRemindTime,
+		"nextremindtime":    userInfo.NextRemindTime,
+		"lineid":            userInfo.LineId,
+		"claimtime":         time.Now().In(timeLoc),
+		"lastremindtime":    time.Now().In(timeLoc),
 	})
 	if err != nil {
-		log.Printf("failed to regist NT account: %v",err)
+		log.Printf("failed to regist NT account: %v", err)
 		return nil, err
 	}
 	log.Printf("ok to register: %v", insertResult.InsertedID)
@@ -66,7 +68,7 @@ func (m *MongoDB) FindAllRecord() (*mongo.Cursor, error) {
 		return nil, fmt.Errorf("failed to ping mongoDB: %v", err)
 	}
 	collection := dbUtil.Database(m.Database).Collection(m.Collection)
-	ctx, _ := context.WithTimeout(context.Background(), 30 *time.Second)
+	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	findAllResult, err := collection.Find(ctx, bson.D{})
 	if err != nil {
 		log.Printf("failed to find: %v", err)
@@ -83,7 +85,7 @@ func (m *MongoDB) FindRecord(value string) (bool, error) {
 		return false, fmt.Errorf("failed to ping mongoDB: %v", err)
 	}
 	collection := dbUtil.Database(m.Database).Collection(m.Collection)
-	ctx, _ := context.WithTimeout(context.Background(), 30 *time.Second)
+	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	filter := bson.M{"lineid": value}
 	err = collection.FindOne(ctx, filter).Decode(&Model.User2{})
 	if err != nil {
@@ -100,15 +102,14 @@ func (m *MongoDB) UpdateRecord(filterInfo bson.M, newInfo bson.M) (bool, error) 
 		return false, fmt.Errorf("failed to ping mongoDB: %v", err)
 	}
 	collection := dbUtil.Database(m.Database).Collection(m.Collection)
-	ctx, _ := context.WithTimeout(context.Background(), 30 *time.Second)
+	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	updateResult, err := collection.UpdateOne(ctx, filterInfo, newInfo)
 	if err != nil {
 		log.Printf("failed to update: %v", err)
 		return false, fmt.Errorf("failed to update: %v", err)
 	}
-	if updateResult.MatchedCount > 0 &&updateResult.ModifiedCount > 0 {
+	if updateResult.MatchedCount > 0 && updateResult.ModifiedCount > 0 {
 		return true, nil
 	}
 	return false, fmt.Errorf("can not found record")
 }
-
