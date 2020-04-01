@@ -179,7 +179,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 										Contents: []linebot.FlexComponent{
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
-												Text: "溫馨提醒：\r\n 有新版員工自主健康聲明書(ver. 20200319)要填寫！",
+												Text: fmt.Sprintln("溫馨提醒：")+fmt.Sprintln("有新版員工自主健康聲明書(ver. 20200319)要填寫！"),
 											},
 										},
 									},
