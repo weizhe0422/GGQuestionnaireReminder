@@ -168,7 +168,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 											},
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
-												Text: "有新版員工自主健康聲明書(ver. 20200319)要填寫！",
+												Text: "04/01: 有新版員工自主健康聲明書要填寫！",
 											},
 										},
 									},
