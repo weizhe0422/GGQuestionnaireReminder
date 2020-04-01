@@ -62,17 +62,17 @@ func PushAlarmMessage() {
 		log.Println("開始檢查")
 		var user Model.User2
 		err := allRecord.Decode(&user)
-		log.Println("ID:", user.LineId, "設定時間:", user.RemindTime)
+		log.Println("ID:", user.LineId, "設定時間:", user.SettingRemindTime)
 		if err != nil {
 			log.Printf("failed to decode: %v", err)
 			continue
 		}
-		log.Println("提醒時間:", user.RemindTime.In(timeLoc))
+		log.Println("提醒時間:", user.NextRemindTime.In(timeLoc))
 		log.Println("現在時間(上海):", time.Now().In(timeLoc))
 
 		log.Printf("上次提醒時間:%v", user.LastRemindTime.In(timeLoc))
 
-		if user.RemindTime.In(timeLoc).Before(time.Now().In(timeLoc)) {
+		if user.NextRemindTime.In(timeLoc).Before(time.Now().In(timeLoc)) {
 			log.Println("開始發送提醒")
 			_, err := bot.PushMessage(user.LineId, linebot.NewTextMessage("記得去填問卷啊！"+surveycakeURL)).Do()
 			if err != nil {
@@ -82,15 +82,18 @@ func PushAlarmMessage() {
 
 			log.Printf("推送提提醒給%s成功", user.LineId)
 			tomorrow := time.Now().AddDate(0,0,1)
+			setHour,_ := strconv.Atoi(user.SettingRemindTime[0:2])
+			setMin,_ := strconv.Atoi(user.SettingRemindTime[3:5])
 			_, err = mongo.UpdateRecord(bson.M{"lineid": user.LineId},
 										bson.M{"$set": bson.M{"lastremindtime": time.Now().In(timeLoc),
-											                   "remindtime": time.Date(tomorrow.Year(), tomorrow.Month(), tomorrow.Day(),
-																   user.RemindTime.Hour()+8,user.RemindTime.Minute(),0,0,timeLoc)}})
+											                   "nextremindtime": time.Date(tomorrow.Year(), tomorrow.Month(), tomorrow.Day(),
+																   setHour,setMin,0,0,timeLoc)}})
+			log.Printf("下次提醒時間: %v",time.Date(tomorrow.Year(), tomorrow.Month(), tomorrow.Day(), setHour,setMin,0,0,timeLoc))
 			if err != nil {
 				log.Printf("更新提醒時間失敗:%v", err)
 			}
 		} else {
-			log.Printf("%s尚未到提醒時間%s", user.LineId, user.RemindTime.In(timeLoc))
+			log.Printf("%s尚未到提醒時間%s", user.LineId, user.NextRemindTime.In(timeLoc))
 		}
 		log.Println("結束檢查")
 	}
@@ -189,8 +192,9 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				setMin,_ := strconv.Atoi(event.Postback.Params.Time[3:5])
 				timeLoc, _ := time.LoadLocation("Asia/Shanghai")
 				registInfo := Model.User{LineId: event.Source.UserID,
-										 RemindTime: time.Date(tomorrow.Year(), tomorrow.Month(), tomorrow.Day(),
-										 						setHour,setMin,0,0,timeLoc)}
+										 SettingRemindTime: event.Postback.Params.Time,
+										 NextRemindTime: time.Date(tomorrow.Year(), tomorrow.Month(), tomorrow.Day(),
+										 						    setHour,setMin,0,0,timeLoc)}
 				log.Println("設定時間:",time.Date(tomorrow.Year(), tomorrow.Month(), tomorrow.Day(),
 					setHour,setMin,0,0,time.Now().Location()))
 				record, err := mongo.InsertOneRecord(registInfo)
