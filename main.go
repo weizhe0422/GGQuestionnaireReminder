@@ -31,16 +31,11 @@ func main() {
 
 	imageURLPage1 = []string{
 		"https://images.pexels.com/photos/307008/pexels-photo-307008.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-		"https://images.pexels.com/photos/919606/pexels-photo-919606.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-		"https://images.pexels.com/photos/3733341/pexels-photo-3733341.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
 		"https://images.pexels.com/photos/3992952/pexels-photo-3992952.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
 		"https://images.pexels.com/photos/3873197/pexels-photo-3873197.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
 	}
 	imageURLPage2 = []string{
 		"https://images.pexels.com/photos/3952231/pexels-photo-3952231.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
-		"https://images.pexels.com/photos/3987146/pexels-photo-3987146.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
-		"https://images.pexels.com/photos/981150/pexels-photo-981150.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-		"https://images.pexels.com/photos/3957987/pexels-photo-3957987.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
 		"https://images.pexels.com/photos/3902732/pexels-photo-3902732.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
 	}
 
@@ -154,7 +149,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 									Header:    nil,
 									Hero: &linebot.ImageComponent{
 										Type:  linebot.FlexComponentTypeImage,
-										URL: imageURLPage2[rand.Intn(5)],
+										URL: imageURLPage2[rand.Intn(len(imageURLPage2))],
 										Align: linebot.FlexComponentAlignTypeCenter,
 										Size:  linebot.FlexImageSizeTypeFull,
 									},
@@ -182,7 +177,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 									Header:    nil,
 									Hero: &linebot.ImageComponent{
 										Type:  linebot.FlexComponentTypeImage,
-										URL:   imageURLPage1[rand.Intn(5)],
+										URL:   imageURLPage1[rand.Intn(len(imageURLPage1))],
 										Align: linebot.FlexComponentAlignTypeCenter,
 										Size:  linebot.FlexImageSizeTypeFull,
 									},
