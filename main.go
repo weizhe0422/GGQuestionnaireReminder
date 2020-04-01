@@ -159,8 +159,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 										Size:  linebot.FlexImageSizeTypeFull,
 									},
 									Body: &linebot.BoxComponent{
-										Type:   linebot.FlexComponentTypeButton,
-										Layout: linebot.FlexBoxLayoutTypeHorizontal,
+										Type:   linebot.FlexComponentTypeText,
+										Layout: linebot.FlexBoxLayoutTypeVertical,
 										Contents: []linebot.FlexComponent{
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
