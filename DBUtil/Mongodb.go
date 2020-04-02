@@ -31,6 +31,7 @@ func (m *MongoDB) InsertOneRecord(userInfo Model.User) (*mongo.InsertOneResult, 
 	if err != nil {
 		return nil, fmt.Errorf("failed to ping mongoDB: %v", err)
 	}
+	defer dbUtil.Disconnect(context.TODO())
 
 	collection := dbUtil.Database(m.Database).Collection(m.Collection)
 
@@ -67,6 +68,8 @@ func (m *MongoDB) FindAllRecord() (*mongo.Cursor, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to ping mongoDB: %v", err)
 	}
+	defer dbUtil.Disconnect(context.TODO())
+
 	collection := dbUtil.Database(m.Database).Collection(m.Collection)
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	findAllResult, err := collection.Find(ctx, bson.D{})
@@ -84,6 +87,7 @@ func (m *MongoDB) FindRecord(value string) (bool, error) {
 	if err != nil {
 		return false, fmt.Errorf("failed to ping mongoDB: %v", err)
 	}
+	defer dbUtil.Disconnect(context.TODO())
 	collection := dbUtil.Database(m.Database).Collection(m.Collection)
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	filter := bson.M{"lineid": value}
@@ -101,6 +105,7 @@ func (m *MongoDB) UpdateRecord(filterInfo bson.M, newInfo bson.M) (bool, error) 
 	if err != nil {
 		return false, fmt.Errorf("failed to ping mongoDB: %v", err)
 	}
+	defer dbUtil.Disconnect(context.TODO())
 	collection := dbUtil.Database(m.Database).Collection(m.Collection)
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	updateResult, err := collection.UpdateOne(ctx, filterInfo, newInfo)
