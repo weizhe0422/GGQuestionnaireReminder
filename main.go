@@ -140,10 +140,13 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				switch message.Text{
 				case "findPharmacy":
 					log.Println("跳出位置視窗")
-					bot.ReplyMessage(event.ReplyToken,linebot.NewTextMessage("").WithQuickReplies(
-														linebot.NewQuickReplyItems(
-															linebot.NewQuickReplyButton("https://i.dlpng.com/static/png/6543501_preview.png",
-																linebot.NewLocationAction("查詢附近藥局"))))).Do()
+					_, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("").WithQuickReplies(
+						linebot.NewQuickReplyItems(
+							linebot.NewQuickReplyButton("https://i.dlpng.com/static/png/6543501_preview.png",
+								linebot.NewLocationAction("查詢附近藥局"))))).Do()
+					if err != nil {
+						log.Println("error to get quick replay menu")
+					}
 				default:
 					bot.ReplyMessage(event.ReplyToken,
 						linebot.NewFlexMessage("請問你想做什麼?",
