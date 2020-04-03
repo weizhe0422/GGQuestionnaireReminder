@@ -142,6 +142,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 						&linebot.CarouselContainer{
 							Type: linebot.FlexContainerTypeCarousel,
 							Contents: []*linebot.BubbleContainer{
+								//第一個旋轉選單
 								{
 									Type:      linebot.FlexContainerTypeCarousel,
 									Size:      linebot.FlexBubbleSizeTypeGiga,
@@ -170,6 +171,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 									Footer: nil,
 									Styles: &linebot.BubbleStyle{},
 								},
+								//第二個旋轉選單
 								{
 									Type:      linebot.FlexContainerTypeCarousel,
 									Size:      linebot.FlexBubbleSizeTypeGiga,
@@ -229,5 +231,9 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		default:
 			bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("DEFAULT")).Do()
 		}
+		log.Println("送出目前位置 開始")
+		bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("快速選單").WithQuickReplies(
+			linebot.NewQuickReplyItems(linebot.NewQuickReplyButton("https://i.dlpng.com/static/png/6543501_preview.png",linebot.NewLocationAction("查詢附近藥局"))))).Do()
+		log.Println("送出目前位置 結束")
 	}
 }
