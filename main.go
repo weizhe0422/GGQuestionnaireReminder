@@ -138,9 +138,6 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			case *linebot.TextMessage:
 				log.Println(message.Text)
 				bot.ReplyMessage(event.ReplyToken,
-					linebot.NewTextMessage("").WithQuickReplies(
-						linebot.NewQuickReplyItems(
-							linebot.NewQuickReplyButton("https://i.dlpng.com/static/png/6543501_preview.png", linebot.NewLocationAction("查詢附近藥局")))),
 					linebot.NewFlexMessage("請問你想做什麼?",
 						&linebot.CarouselContainer{
 							Type: linebot.FlexContainerTypeCarousel,
@@ -209,7 +206,9 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 									Styles: &linebot.BubbleStyle{},
 								},
 							},
-						})).Do()
+						}),			linebot.NewTextMessage("").WithQuickReplies(
+						linebot.NewQuickReplyItems(
+							linebot.NewQuickReplyButton("https://i.dlpng.com/static/png/6543501_preview.png", linebot.NewLocationAction("查詢附近藥局"))))).Do()
 			}
 		case linebot.EventTypePostback:
 			switch event.Postback.Data {
