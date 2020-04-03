@@ -137,78 +137,88 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			switch message := event.Message.(type) {
 			case *linebot.TextMessage:
 				log.Println(message.Text)
-				bot.ReplyMessage(event.ReplyToken,
-					linebot.NewFlexMessage("請問你想做什麼?",
-						&linebot.CarouselContainer{
-							Type: linebot.FlexContainerTypeCarousel,
-							Contents: []*linebot.BubbleContainer{
-								//第一個旋轉選單
-								{
-									Type:      linebot.FlexContainerTypeCarousel,
-									Size:      linebot.FlexBubbleSizeTypeGiga,
-									Direction: linebot.FlexBubbleDirectionTypeLTR,
-									Header:    nil,
-									Hero: &linebot.ImageComponent{
-										Type:  linebot.FlexComponentTypeImage,
-										URL: imageURLPage2[rand.Intn(len(imageURLPage2))],
-										Align: linebot.FlexComponentAlignTypeCenter,
-										Size:  linebot.FlexImageSizeTypeFull,
-									},
-									Body: &linebot.BoxComponent{
-										Type:   linebot.FlexComponentTypeText,
-										Layout: linebot.FlexBoxLayoutTypeVertical,
-										Contents: []linebot.FlexComponent{
-											&linebot.TextComponent{
-												Type: linebot.FlexComponentTypeText,
-												Text: "溫馨提醒：",
-											},
-											&linebot.TextComponent{
-												Type: linebot.FlexComponentTypeText,
-												Text: "04/01: 新版‘員工自主健康聲明書'",
+				switch message.Text{
+				case "findPharmacy":
+					bot.ReplyMessage(event.ReplyToken,linebot.NewTextMessage("").WithQuickReplies(
+														linebot.NewQuickReplyItems(
+															linebot.NewQuickReplyButton("https://i.dlpng.com/static/png/6543501_preview.png",
+																linebot.NewLocationAction("查詢附近藥局"))))).Do()
+				default:
+					bot.ReplyMessage(event.ReplyToken,
+						linebot.NewFlexMessage("請問你想做什麼?",
+							&linebot.CarouselContainer{
+								Type: linebot.FlexContainerTypeCarousel,
+								Contents: []*linebot.BubbleContainer{
+									//第一個旋轉選單
+									{
+										Type:      linebot.FlexContainerTypeCarousel,
+										Size:      linebot.FlexBubbleSizeTypeGiga,
+										Direction: linebot.FlexBubbleDirectionTypeLTR,
+										Header:    nil,
+										Hero: &linebot.ImageComponent{
+											Type:  linebot.FlexComponentTypeImage,
+											URL: imageURLPage2[rand.Intn(len(imageURLPage2))],
+											Align: linebot.FlexComponentAlignTypeCenter,
+											Size:  linebot.FlexImageSizeTypeFull,
+										},
+										Body: &linebot.BoxComponent{
+											Type:   linebot.FlexComponentTypeText,
+											Layout: linebot.FlexBoxLayoutTypeVertical,
+											Contents: []linebot.FlexComponent{
+												&linebot.TextComponent{
+													Type: linebot.FlexComponentTypeText,
+													Text: "溫馨提醒：",
+												},
+												&linebot.TextComponent{
+													Type: linebot.FlexComponentTypeText,
+													Text: "04/01: 新版‘員工自主健康聲明書'",
+												},
 											},
 										},
+										Footer: nil,
+										Styles: &linebot.BubbleStyle{},
 									},
-									Footer: nil,
-									Styles: &linebot.BubbleStyle{},
-								},
-								//第二個旋轉選單
-								{
-									Type:      linebot.FlexContainerTypeCarousel,
-									Size:      linebot.FlexBubbleSizeTypeGiga,
-									Direction: linebot.FlexBubbleDirectionTypeLTR,
-									Header:    nil,
-									Hero: &linebot.ImageComponent{
-										Type:  linebot.FlexComponentTypeImage,
-										URL:   imageURLPage1[rand.Intn(len(imageURLPage1))],
-										Align: linebot.FlexComponentAlignTypeCenter,
-										Size:  linebot.FlexImageSizeTypeFull,
-									},
-									Body: &linebot.BoxComponent{
-										Type:   linebot.FlexComponentTypeButton,
-										Layout: linebot.FlexBoxLayoutTypeVertical,
-										Contents: []linebot.FlexComponent{
-											&linebot.ButtonComponent{
-												Type: linebot.FlexComponentTypeButton,
-												Action: linebot.NewDatetimePickerAction("設定提醒時間", "remindTime", "time",
-													"07:00", "23:59", "00:00"),
-											},
-											&linebot.ButtonComponent{
-												Type:   linebot.FlexComponentTypeButton,
-												Action: linebot.NewURIAction("防疫問卷", surveycakeURL),
-											},
-											&linebot.ButtonComponent{
-												Type:   linebot.FlexComponentTypeButton,
-												Action: linebot.NewURIAction("填寫 '員工自主健康聲明書(ver. 20200319)' ", healthydeclareURL),
+									//第二個旋轉選單
+									{
+										Type:      linebot.FlexContainerTypeCarousel,
+										Size:      linebot.FlexBubbleSizeTypeGiga,
+										Direction: linebot.FlexBubbleDirectionTypeLTR,
+										Header:    nil,
+										Hero: &linebot.ImageComponent{
+											Type:  linebot.FlexComponentTypeImage,
+											URL:   imageURLPage1[rand.Intn(len(imageURLPage1))],
+											Align: linebot.FlexComponentAlignTypeCenter,
+											Size:  linebot.FlexImageSizeTypeFull,
+										},
+										Body: &linebot.BoxComponent{
+											Type:   linebot.FlexComponentTypeButton,
+											Layout: linebot.FlexBoxLayoutTypeVertical,
+											Contents: []linebot.FlexComponent{
+												&linebot.ButtonComponent{
+													Type: linebot.FlexComponentTypeButton,
+													Action: linebot.NewDatetimePickerAction("設定提醒時間", "remindTime", "time",
+														"07:00", "23:59", "00:00"),
+												},
+												&linebot.ButtonComponent{
+													Type:   linebot.FlexComponentTypeButton,
+													Action: linebot.NewURIAction("防疫問卷", surveycakeURL),
+												},
+												&linebot.ButtonComponent{
+													Type:   linebot.FlexComponentTypeButton,
+													Action: linebot.NewURIAction("填寫 '員工自主健康聲明書(ver. 20200319)' ", healthydeclareURL),
+												},
+												&linebot.ButtonComponent{
+													Type:   linebot.FlexComponentTypeButton,
+													Action: linebot.NewMessageAction("查詢附近藥局","findPharmacy"),
+												},
 											},
 										},
+										Footer: nil,
+										Styles: &linebot.BubbleStyle{},
 									},
-									Footer: nil,
-									Styles: &linebot.BubbleStyle{},
 								},
-							},
-						}),			linebot.NewTextMessage("").WithQuickReplies(
-						linebot.NewQuickReplyItems(
-							linebot.NewQuickReplyButton("https://i.dlpng.com/static/png/6543501_preview.png", linebot.NewLocationAction("查詢附近藥局"))))).Do()
+							})).Do()
+				}
 			}
 		case linebot.EventTypePostback:
 			switch event.Postback.Data {
