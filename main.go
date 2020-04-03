@@ -139,6 +139,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				log.Println(message.Text)
 				switch message.Text{
 				case "findPharmacy":
+					log.Println("跳出位置視窗")
 					bot.ReplyMessage(event.ReplyToken,linebot.NewTextMessage("").WithQuickReplies(
 														linebot.NewQuickReplyItems(
 															linebot.NewQuickReplyButton("https://i.dlpng.com/static/png/6543501_preview.png",
