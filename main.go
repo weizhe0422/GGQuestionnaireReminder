@@ -138,12 +138,12 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			case *linebot.TextMessage:
 				log.Println(message.Text)
 				switch message.Text{
-				case "findPharmacy":
+				case "開始查詢":
 					log.Println("跳出位置視窗")
 					_, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("請選擇動作").WithQuickReplies(
 						linebot.NewQuickReplyItems(
 							linebot.NewQuickReplyButton("https://i.dlpng.com/static/png/6543501_preview.png",
-								linebot.NewLocationAction("查詢附近藥局"))))).Do()
+								linebot.NewLocationAction("選擇你所在位置"))))).Do()
 					if err != nil {
 						log.Printf("error to get quick replay menu:%v",err)
 					}
@@ -213,7 +213,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 												},
 												&linebot.ButtonComponent{
 													Type:   linebot.FlexComponentTypeButton,
-													Action: linebot.NewMessageAction("查詢附近藥局","findPharmacy"),
+													Action: linebot.NewMessageAction("查詢附近藥局","開始查詢"),
 												},
 											},
 										},
