@@ -135,6 +135,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		switch event.Type {
 		case linebot.EventTypeMessage:
 			switch message := event.Message.(type) {
+			case *linebot.LocationMessage:
+				bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("被你找到新功能了！ 之後才會支援喔！")).Do()
 			case *linebot.TextMessage:
 				log.Println(message.Text)
 				switch message.Text{
