@@ -145,7 +145,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 							linebot.NewQuickReplyButton("https://i.dlpng.com/static/png/6543501_preview.png",
 								linebot.NewLocationAction("查詢附近藥局"))))).Do()
 					if err != nil {
-						log.Println("error to get quick replay menu")
+						log.Printf("error to get quick replay menu:%v",err)
 					}
 				default:
 					bot.ReplyMessage(event.ReplyToken,
