@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/line/line-bot-sdk-go/linebot"
+	"github.com/weizhe0422/GGQuestionnaireReminder/Controller"
 	"github.com/weizhe0422/GGQuestionnaireReminder/DBUtil"
 	"github.com/weizhe0422/GGQuestionnaireReminder/Model"
 	"go.mongodb.org/mongo-driver/bson"
@@ -20,11 +21,15 @@ var bot *linebot.Client
 var groupID string
 
 const (
-	mongoAtlas    = "mongodb+srv://gguser:true0422@cluster0-lpy0f.gcp.mongodb.net/test?retryWrites=true&w=majority"
-	surveycakeURL = "https://zh.surveymonkey.com/r/EmployeeHealthCheck?fbclid=IwAR2fKoFAYPEHxwhNpxIcgFXzWXylYGcVfVRuNPS88VpKwwKi_40cavQZYFU"
+	mongoAtlas        = "mongodb+srv://gguser:true0422@cluster0-lpy0f.gcp.mongodb.net/test?retryWrites=true&w=majority"
+	surveycakeURL     = "https://zh.surveymonkey.com/r/EmployeeHealthCheck?fbclid=IwAR2fKoFAYPEHxwhNpxIcgFXzWXylYGcVfVRuNPS88VpKwwKi_40cavQZYFU"
 	healthydeclareURL = "https://zh.surveymonkey.com/r/EmployeeHealthDeclarationForm"
+	PharmacyInfoURL   = "https://raw.githubusercontent.com/kiang/pharmacies/master/json/points.json"
 )
-var imageURLPage1,imageURLPage2 []string
+
+var imageURLPage1, imageURLPage2 []string
+var tempPharmacyList []Model.PharmacyInfo
+var pharmacyInfoUtil Controller.PharmacyInfo
 
 func main() {
 	var err error
@@ -52,9 +57,34 @@ func main() {
 		}
 	}()
 
+	pharmacyInfoUtil = Controller.PharmacyInfo{URL: PharmacyInfoURL}
+	go func() {
+		for {
+			log.Println("開始更新藥局資訊")
+			tempPharmacyList = []Model.PharmacyInfo{}
+			tempPharmacyList, _ = RefreshPharmacyList()
+			log.Println("結束更新藥局資訊")
+			time.Sleep(12 * time.Hour)
+		}
+	}()
+
 	port := os.Getenv("PORT")
 	addr := fmt.Sprintf(":%s", port)
 	http.ListenAndServe(addr, nil)
+}
+
+func RefreshPharmacyList() ([]Model.PharmacyInfo, error) {
+	resp, err := pharmacyInfoUtil.GetPharmacyResp()
+	if err != nil {
+		log.Printf("failed to get pharmacy service response: %v", err)
+		return nil, err
+	}
+	pharmacyInfoList, err := pharmacyInfoUtil.GetPharmacyInfoList(resp)
+	if err != nil {
+		log.Printf("failed to get pharmacy parsing result: %v", err)
+		return nil, err
+	}
+	return pharmacyInfoList, nil
 }
 
 func PushAlarmMessage() {
@@ -94,14 +124,14 @@ func PushAlarmMessage() {
 			}
 
 			log.Printf("推送提提醒給%s成功", user.LineId)
-			tomorrow := time.Now().AddDate(0,0,1)
-			setHour,_ := strconv.Atoi(user.SettingRemindTime[0:2])
-			setMin,_ := strconv.Atoi(user.SettingRemindTime[3:5])
+			tomorrow := time.Now().AddDate(0, 0, 1)
+			setHour, _ := strconv.Atoi(user.SettingRemindTime[0:2])
+			setMin, _ := strconv.Atoi(user.SettingRemindTime[3:5])
 			_, err = mongo.UpdateRecord(bson.M{"lineid": user.LineId},
-										bson.M{"$set": bson.M{"lastremindtime": time.Now().In(timeLoc),
-											                   "nextremindtime": time.Date(tomorrow.Year(), tomorrow.Month(), tomorrow.Day(),
-																   setHour,setMin,0,0,timeLoc)}})
-			log.Printf("下次提醒時間: %v",time.Date(tomorrow.Year(), tomorrow.Month(), tomorrow.Day(), setHour,setMin,0,0,timeLoc))
+				bson.M{"$set": bson.M{"lastremindtime": time.Now().In(timeLoc),
+					"nextremindtime": time.Date(tomorrow.Year(), tomorrow.Month(), tomorrow.Day(),
+						setHour, setMin, 0, 0, timeLoc)}})
+			log.Printf("下次提醒時間: %v", time.Date(tomorrow.Year(), tomorrow.Month(), tomorrow.Day(), setHour, setMin, 0, 0, timeLoc))
 			if err != nil {
 				log.Printf("更新提醒時間失敗:%v", err)
 			}
@@ -136,10 +166,194 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		case linebot.EventTypeMessage:
 			switch message := event.Message.(type) {
 			case *linebot.LocationMessage:
-				bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("被你找到新功能了！ 之後才會支援喔！")).Do()
+				log.Printf("[查詢附近藥局] 目前所在: %f, %f", message.Latitude, message.Longitude)
+				lastShortDistpharmacy, err := pharmacyInfoUtil.GetLastShortDistancePharmacy(tempPharmacyList, [2]float64{message.Latitude, message.Longitude})
+				if err != nil {
+					log.Printf("failed to get last short distance pharmacy info: %v",err)
+					return
+				}
+				_, err = bot.ReplyMessage(event.ReplyToken,
+					linebot.NewFlexMessage("距離你最近的五家藥局",
+						&linebot.CarouselContainer{
+							Type: linebot.FlexContainerTypeCarousel,
+							Contents: []*linebot.BubbleContainer{
+								//第一個旋轉選單
+								{
+									Type:      linebot.FlexContainerTypeCarousel,
+									Size:      linebot.FlexBubbleSizeTypeGiga,
+									Direction: linebot.FlexBubbleDirectionTypeLTR,
+									Header:    nil,
+									Hero: &linebot.ImageComponent{
+										Type:  linebot.FlexComponentTypeImage,
+										URL:   imageURLPage2[rand.Intn(len(imageURLPage2))],
+										Align: linebot.FlexComponentAlignTypeCenter,
+										Size:  linebot.FlexImageSizeTypeFull,
+									},
+									Body: &linebot.BoxComponent{
+										Type:   linebot.FlexComponentTypeText,
+										Layout: linebot.FlexBoxLayoutTypeVertical,
+										Contents: []linebot.FlexComponent{
+											&linebot.TextComponent{
+												Type: linebot.FlexComponentTypeText,
+												Text: "[藥局名稱] " + lastShortDistpharmacy[0].Properties.Name,
+											},
+											&linebot.TextComponent{
+												Type: linebot.FlexComponentTypeText,
+												Text: "[地址] " + lastShortDistpharmacy[0].Properties.Address,
+											},
+											&linebot.TextComponent{
+												Type: linebot.FlexComponentTypeText,
+												Text: "[剩餘口罩] 大人：" + strconv.Itoa(lastShortDistpharmacy[0].Properties.Mask_adult) +
+													"、小孩：" + strconv.Itoa(lastShortDistpharmacy[0].Properties.Mask_child),
+											},
+										},
+									},
+									Footer: nil,
+									Styles: &linebot.BubbleStyle{},
+								},
+								//第二個旋轉選單
+								{
+									Type:      linebot.FlexContainerTypeCarousel,
+									Size:      linebot.FlexBubbleSizeTypeGiga,
+									Direction: linebot.FlexBubbleDirectionTypeLTR,
+									Header:    nil,
+									Hero: &linebot.ImageComponent{
+										Type:  linebot.FlexComponentTypeImage,
+										URL:   imageURLPage2[rand.Intn(len(imageURLPage2))],
+										Align: linebot.FlexComponentAlignTypeCenter,
+										Size:  linebot.FlexImageSizeTypeFull,
+									},
+									Body: &linebot.BoxComponent{
+										Type:   linebot.FlexComponentTypeText,
+										Layout: linebot.FlexBoxLayoutTypeVertical,
+										Contents: []linebot.FlexComponent{
+											&linebot.TextComponent{
+												Type: linebot.FlexComponentTypeText,
+												Text: "[藥局名稱] " + lastShortDistpharmacy[1].Properties.Name,
+											},
+											&linebot.TextComponent{
+												Type: linebot.FlexComponentTypeText,
+												Text: "[地址] " + lastShortDistpharmacy[1].Properties.Address,
+											},
+											&linebot.TextComponent{
+												Type: linebot.FlexComponentTypeText,
+												Text: "[剩餘口罩] 大人：" + strconv.Itoa(lastShortDistpharmacy[1].Properties.Mask_adult) +
+													"、小孩：" + strconv.Itoa(lastShortDistpharmacy[1].Properties.Mask_child),
+											},
+										},
+									},
+									Footer: nil,
+									Styles: &linebot.BubbleStyle{},
+								},
+								{
+									Type:      linebot.FlexContainerTypeCarousel,
+									Size:      linebot.FlexBubbleSizeTypeGiga,
+									Direction: linebot.FlexBubbleDirectionTypeLTR,
+									Header:    nil,
+									Hero: &linebot.ImageComponent{
+										Type:  linebot.FlexComponentTypeImage,
+										URL:   imageURLPage2[rand.Intn(len(imageURLPage2))],
+										Align: linebot.FlexComponentAlignTypeCenter,
+										Size:  linebot.FlexImageSizeTypeFull,
+									},
+									Body: &linebot.BoxComponent{
+										Type:   linebot.FlexComponentTypeText,
+										Layout: linebot.FlexBoxLayoutTypeVertical,
+										Contents: []linebot.FlexComponent{
+											&linebot.TextComponent{
+												Type: linebot.FlexComponentTypeText,
+												Text: "[藥局名稱] " + lastShortDistpharmacy[2].Properties.Name,
+											},
+											&linebot.TextComponent{
+												Type: linebot.FlexComponentTypeText,
+												Text: "[地址] " + lastShortDistpharmacy[2].Properties.Address,
+											},
+											&linebot.TextComponent{
+												Type: linebot.FlexComponentTypeText,
+												Text: "[剩餘口罩] 大人：" + strconv.Itoa(lastShortDistpharmacy[2].Properties.Mask_adult) +
+													"、小孩：" + strconv.Itoa(lastShortDistpharmacy[2].Properties.Mask_child),
+											},
+										},
+									},
+									Footer: nil,
+									Styles: &linebot.BubbleStyle{},
+								},
+								{
+									Type:      linebot.FlexContainerTypeCarousel,
+									Size:      linebot.FlexBubbleSizeTypeGiga,
+									Direction: linebot.FlexBubbleDirectionTypeLTR,
+									Header:    nil,
+									Hero: &linebot.ImageComponent{
+										Type:  linebot.FlexComponentTypeImage,
+										URL:   imageURLPage2[rand.Intn(len(imageURLPage2))],
+										Align: linebot.FlexComponentAlignTypeCenter,
+										Size:  linebot.FlexImageSizeTypeFull,
+									},
+									Body: &linebot.BoxComponent{
+										Type:   linebot.FlexComponentTypeText,
+										Layout: linebot.FlexBoxLayoutTypeVertical,
+										Contents: []linebot.FlexComponent{
+											&linebot.TextComponent{
+												Type: linebot.FlexComponentTypeText,
+												Text: "[藥局名稱] " + lastShortDistpharmacy[3].Properties.Name,
+											},
+											&linebot.TextComponent{
+												Type: linebot.FlexComponentTypeText,
+												Text: "[地址] " + lastShortDistpharmacy[3].Properties.Address,
+											},
+											&linebot.TextComponent{
+												Type: linebot.FlexComponentTypeText,
+												Text: "[剩餘口罩] 大人：" + strconv.Itoa(lastShortDistpharmacy[3].Properties.Mask_adult) +
+													"、小孩：" + strconv.Itoa(lastShortDistpharmacy[3].Properties.Mask_child),
+											},
+										},
+									},
+									Footer: nil,
+									Styles: &linebot.BubbleStyle{},
+								},
+								{
+									Type:      linebot.FlexContainerTypeCarousel,
+									Size:      linebot.FlexBubbleSizeTypeGiga,
+									Direction: linebot.FlexBubbleDirectionTypeLTR,
+									Header:    nil,
+									Hero: &linebot.ImageComponent{
+										Type:  linebot.FlexComponentTypeImage,
+										URL:   imageURLPage2[rand.Intn(len(imageURLPage2))],
+										Align: linebot.FlexComponentAlignTypeCenter,
+										Size:  linebot.FlexImageSizeTypeFull,
+									},
+									Body: &linebot.BoxComponent{
+										Type:   linebot.FlexComponentTypeText,
+										Layout: linebot.FlexBoxLayoutTypeVertical,
+										Contents: []linebot.FlexComponent{
+											&linebot.TextComponent{
+												Type: linebot.FlexComponentTypeText,
+												Text: "[藥局名稱] " + lastShortDistpharmacy[4].Properties.Name,
+											},
+											&linebot.TextComponent{
+												Type: linebot.FlexComponentTypeText,
+												Text: "[地址] " + lastShortDistpharmacy[4].Properties.Address,
+											},
+											&linebot.TextComponent{
+												Type: linebot.FlexComponentTypeText,
+												Text: "[剩餘口罩] 大人：" + strconv.Itoa(lastShortDistpharmacy[4].Properties.Mask_adult) +
+													"、小孩：" + strconv.Itoa(lastShortDistpharmacy[4].Properties.Mask_child),
+											},
+										},
+									},
+									Footer: nil,
+									Styles: &linebot.BubbleStyle{},
+								},
+							},
+						})).Do()
+				if err != nil {
+					log.Printf("failed to send pharmacy info: %v",err)
+					return
+				}
+				//bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("被你找到新功能了！ 之後才會支援喔！")).Do()
 			case *linebot.TextMessage:
 				log.Println(message.Text)
-				switch message.Text{
+				switch message.Text {
 				case "開始查詢":
 					log.Println("跳出位置視窗")
 					_, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("請選擇動作").WithQuickReplies(
@@ -147,7 +361,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 							linebot.NewQuickReplyButton("https://i.dlpng.com/static/png/6543501_preview.png",
 								linebot.NewLocationAction("選擇你所在位置"))))).Do()
 					if err != nil {
-						log.Printf("error to get quick replay menu:%v",err)
+						log.Printf("error to get quick replay menu:%v", err)
 					}
 				default:
 					bot.ReplyMessage(event.ReplyToken,
@@ -163,7 +377,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 										Header:    nil,
 										Hero: &linebot.ImageComponent{
 											Type:  linebot.FlexComponentTypeImage,
-											URL: imageURLPage2[rand.Intn(len(imageURLPage2))],
+											URL:   imageURLPage2[rand.Intn(len(imageURLPage2))],
 											Align: linebot.FlexComponentAlignTypeCenter,
 											Size:  linebot.FlexImageSizeTypeFull,
 										},
@@ -215,7 +429,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 												},
 												&linebot.ButtonComponent{
 													Type:   linebot.FlexComponentTypeButton,
-													Action: linebot.NewMessageAction("查詢附近藥局","開始查詢"),
+													Action: linebot.NewMessageAction("查詢附近藥局", "開始查詢"),
 												},
 											},
 										},
@@ -228,17 +442,17 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		case linebot.EventTypePostback:
 			switch event.Postback.Data {
-			case "remindTime"://event.Postback.Params.Time
-				tomorrow := time.Now().AddDate(0,0,0)
-				setHour,_ := strconv.Atoi(event.Postback.Params.Time[0:2])
-				setMin,_ := strconv.Atoi(event.Postback.Params.Time[3:5])
+			case "remindTime": //event.Postback.Params.Time
+				tomorrow := time.Now().AddDate(0, 0, 0)
+				setHour, _ := strconv.Atoi(event.Postback.Params.Time[0:2])
+				setMin, _ := strconv.Atoi(event.Postback.Params.Time[3:5])
 				timeLoc, _ := time.LoadLocation("Asia/Shanghai")
 				registInfo := Model.User{LineId: event.Source.UserID,
-										 SettingRemindTime: event.Postback.Params.Time,
-										 NextRemindTime: time.Date(tomorrow.Year(), tomorrow.Month(), tomorrow.Day(),
-										 						    setHour,setMin,0,0,timeLoc)}
-				log.Println("設定時間:",time.Date(tomorrow.Year(), tomorrow.Month(), tomorrow.Day(),
-					setHour,setMin,0,0,time.Now().Location()))
+					SettingRemindTime: event.Postback.Params.Time,
+					NextRemindTime: time.Date(tomorrow.Year(), tomorrow.Month(), tomorrow.Day(),
+						setHour, setMin, 0, 0, timeLoc)}
+				log.Println("設定時間:", time.Date(tomorrow.Year(), tomorrow.Month(), tomorrow.Day(),
+					setHour, setMin, 0, 0, time.Now().Location()))
 				record, err := mongo.InsertOneRecord(registInfo)
 				if err != nil {
 					bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("設定時間失敗，請重新嘗試!"))
