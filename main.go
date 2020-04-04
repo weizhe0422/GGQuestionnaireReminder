@@ -225,7 +225,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 											&linebot.ButtonComponent{
 												Type: linebot.FlexComponentTypeText,
 												Action: linebot.NewURIAction("地圖",
-													fmt.Sprintf(MapURL, lastShortDistpharmacy[0].Geometry.Coordinates[0],lastShortDistpharmacy[0].Geometry.Coordinates[0])),
+													fmt.Sprintf(MapURL, lastShortDistpharmacy[0].Geometry.Coordinates[0],lastShortDistpharmacy[0].Geometry.Coordinates[1])),
 											},
 										},
 									},
@@ -268,7 +268,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 											&linebot.ButtonComponent{
 												Type: linebot.FlexComponentTypeText,
 												Action: linebot.NewURIAction("地圖",
-													fmt.Sprintf(MapURL, lastShortDistpharmacy[1].Geometry.Coordinates[0],lastShortDistpharmacy[1].Geometry.Coordinates[0])),
+													fmt.Sprintf(MapURL, lastShortDistpharmacy[1].Geometry.Coordinates[0],lastShortDistpharmacy[1].Geometry.Coordinates[1])),
 											},
 										},
 									},
@@ -310,7 +310,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 											&linebot.ButtonComponent{
 												Type: linebot.FlexComponentTypeText,
 												Action: linebot.NewURIAction("地圖",
-													fmt.Sprintf(MapURL, lastShortDistpharmacy[2].Geometry.Coordinates[0],lastShortDistpharmacy[2].Geometry.Coordinates[0])),
+													fmt.Sprintf(MapURL, lastShortDistpharmacy[2].Geometry.Coordinates[0],lastShortDistpharmacy[2].Geometry.Coordinates[1])),
 											},
 										},
 									},
@@ -352,7 +352,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 											&linebot.ButtonComponent{
 												Type: linebot.FlexComponentTypeText,
 												Action: linebot.NewURIAction("地圖",
-													fmt.Sprintf(MapURL, lastShortDistpharmacy[3].Geometry.Coordinates[0],lastShortDistpharmacy[3].Geometry.Coordinates[0])),
+													fmt.Sprintf(MapURL, lastShortDistpharmacy[3].Geometry.Coordinates[0],lastShortDistpharmacy[3].Geometry.Coordinates[1])),
 											},
 										},
 									},
@@ -394,7 +394,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 											&linebot.ButtonComponent{
 												Type: linebot.FlexComponentTypeText,
 												Action: linebot.NewURIAction("地圖",
-													fmt.Sprintf(MapURL, lastShortDistpharmacy[4].Geometry.Coordinates[0],lastShortDistpharmacy[4].Geometry.Coordinates[0])),
+													fmt.Sprintf(MapURL, lastShortDistpharmacy[4].Geometry.Coordinates[0],lastShortDistpharmacy[4].Geometry.Coordinates[1])),
 											},
 										},
 									},
