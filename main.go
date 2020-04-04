@@ -27,7 +27,7 @@ const (
 	PharmacyInfoURL   = "https://raw.githubusercontent.com/kiang/pharmacies/master/json/points.json"
 )
 
-var imageURLPage1, imageURLPage2 []string
+var imageURLPage1, imageURLPage2, pharmacyImgURL []string
 var tempPharmacyList []Model.PharmacyInfo
 var pharmacyInfoUtil Controller.PharmacyInfo
 
@@ -42,6 +42,13 @@ func main() {
 	imageURLPage2 = []string{
 		"https://images.pexels.com/photos/3952231/pexels-photo-3952231.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500",
 		"https://images.pexels.com/photos/3902732/pexels-photo-3902732.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260",
+	}
+	pharmacyImgURL = []string {
+		"https://images.pexels.com/photos/419585/chemist-pharmacy-singer-man-419585.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+		"https://images.pexels.com/photos/3943882/pexels-photo-3943882.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+		"https://images.pexels.com/photos/3962264/pexels-photo-3962264.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+		"https://images.pexels.com/photos/3962285/pexels-photo-3962285.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+		"https://images.pexels.com/photos/3958125/pexels-photo-3958125.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
 	}
 
 	bot, err = linebot.New(os.Getenv("ChannelSecret"), os.Getenv("ChannelAccessToken"))
@@ -58,13 +65,17 @@ func main() {
 	}()
 
 	pharmacyInfoUtil = Controller.PharmacyInfo{URL: PharmacyInfoURL}
+	log.Println("開始更新藥局資訊")
+	tempPharmacyList = []Model.PharmacyInfo{}
+	tempPharmacyList, _ = RefreshPharmacyList()
+	log.Println("結束更新藥局資訊")
 	go func() {
 		for {
 			log.Println("開始更新藥局資訊")
 			tempPharmacyList = []Model.PharmacyInfo{}
 			tempPharmacyList, _ = RefreshPharmacyList()
 			log.Println("結束更新藥局資訊")
-			time.Sleep(12 * time.Hour)
+			time.Sleep(3 * time.Minute)
 		}
 	}()
 
@@ -185,7 +196,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 									Header:    nil,
 									Hero: &linebot.ImageComponent{
 										Type:  linebot.FlexComponentTypeImage,
-										URL:   imageURLPage2[rand.Intn(len(imageURLPage2))],
+										URL:   pharmacyImgURL[0],
 										Align: linebot.FlexComponentAlignTypeCenter,
 										Size:  linebot.FlexImageSizeTypeFull,
 									},
@@ -195,7 +206,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 										Contents: []linebot.FlexComponent{
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
-												Text: "[藥局名稱] " + lastShortDistpharmacy[0].Properties.Name,
+												Text: lastShortDistpharmacy[0].Properties.Name,
 											},
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
@@ -219,7 +230,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 									Header:    nil,
 									Hero: &linebot.ImageComponent{
 										Type:  linebot.FlexComponentTypeImage,
-										URL:   imageURLPage2[rand.Intn(len(imageURLPage2))],
+										URL:   pharmacyImgURL[1],
 										Align: linebot.FlexComponentAlignTypeCenter,
 										Size:  linebot.FlexImageSizeTypeFull,
 									},
@@ -229,7 +240,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 										Contents: []linebot.FlexComponent{
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
-												Text: "[藥局名稱] " + lastShortDistpharmacy[1].Properties.Name,
+												Text: lastShortDistpharmacy[1].Properties.Name,
 											},
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
@@ -252,7 +263,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 									Header:    nil,
 									Hero: &linebot.ImageComponent{
 										Type:  linebot.FlexComponentTypeImage,
-										URL:   imageURLPage2[rand.Intn(len(imageURLPage2))],
+										URL:   pharmacyImgURL[2],
 										Align: linebot.FlexComponentAlignTypeCenter,
 										Size:  linebot.FlexImageSizeTypeFull,
 									},
@@ -262,7 +273,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 										Contents: []linebot.FlexComponent{
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
-												Text: "[藥局名稱] " + lastShortDistpharmacy[2].Properties.Name,
+												Text: lastShortDistpharmacy[2].Properties.Name,
 											},
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
@@ -285,7 +296,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 									Header:    nil,
 									Hero: &linebot.ImageComponent{
 										Type:  linebot.FlexComponentTypeImage,
-										URL:   imageURLPage2[rand.Intn(len(imageURLPage2))],
+										URL:   pharmacyImgURL[3],
 										Align: linebot.FlexComponentAlignTypeCenter,
 										Size:  linebot.FlexImageSizeTypeFull,
 									},
@@ -295,7 +306,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 										Contents: []linebot.FlexComponent{
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
-												Text: "[藥局名稱] " + lastShortDistpharmacy[3].Properties.Name,
+												Text: lastShortDistpharmacy[3].Properties.Name,
 											},
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
@@ -318,7 +329,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 									Header:    nil,
 									Hero: &linebot.ImageComponent{
 										Type:  linebot.FlexComponentTypeImage,
-										URL:   imageURLPage2[rand.Intn(len(imageURLPage2))],
+										URL:   pharmacyImgURL[4],
 										Align: linebot.FlexComponentAlignTypeCenter,
 										Size:  linebot.FlexImageSizeTypeFull,
 									},
@@ -328,7 +339,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 										Contents: []linebot.FlexComponent{
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
-												Text: "[藥局名稱] " + lastShortDistpharmacy[4].Properties.Name,
+												Text: lastShortDistpharmacy[4].Properties.Name,
 											},
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
