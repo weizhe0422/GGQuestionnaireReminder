@@ -92,6 +92,7 @@ func RefreshPharmacyList() ([]Model.PharmacyInfo, error) {
 	}
 	pharmacyInfoList, err := pharmacyInfoUtil.GetPharmacyInfoList(resp)
 	if err != nil {
+		log.Printf("pharmacyContent: %s",resp)
 		log.Printf("failed to get pharmacy parsing result: %v", err)
 		return nil, err
 	}
