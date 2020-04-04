@@ -12,7 +12,7 @@ type PharmacyInfo struct {
 }
 
 type PharmacyProps struct {
-	Id              int    `json:"id"`
+	Id              string `json:"id"`
 	Name            string `json:"name"`
 	Phone           string `json:"phone"`
 	Address         string `json:"address"`
