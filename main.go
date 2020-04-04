@@ -25,6 +25,7 @@ const (
 	surveycakeURL     = "https://zh.surveymonkey.com/r/EmployeeHealthCheck?fbclid=IwAR2fKoFAYPEHxwhNpxIcgFXzWXylYGcVfVRuNPS88VpKwwKi_40cavQZYFU"
 	healthydeclareURL = "https://zh.surveymonkey.com/r/EmployeeHealthDeclarationForm"
 	PharmacyInfoURL   = "https://raw.githubusercontent.com/kiang/pharmacies/master/json/points.json"
+	MapURL 			  = "https://fysh711426.github.io/iMaskMap/index.html?longitude=%f&latitude=%f"
 )
 
 var imageURLPage1, imageURLPage2, pharmacyImgURL []string
@@ -210,12 +211,21 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 											},
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
-												Text: "[地址] " + lastShortDistpharmacy[0].Properties.Address,
+												Text: "地址: " + lastShortDistpharmacy[0].Properties.Address,
+											},
+											&linebot.TextComponent{
+												Type: linebot.FlexComponentTypeText,
+												Text: "電話: " + lastShortDistpharmacy[0].Properties.Phone,
 											},
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
 												Text: "[剩餘口罩] 大人：" + strconv.Itoa(lastShortDistpharmacy[0].Properties.Mask_adult) +
 													"、小孩：" + strconv.Itoa(lastShortDistpharmacy[0].Properties.Mask_child),
+											},
+											&linebot.ButtonComponent{
+												Type: linebot.FlexComponentTypeText,
+												Action: linebot.NewURIAction("地圖",
+													fmt.Sprintf(MapURL, lastShortDistpharmacy[0].Geometry.Coordinates[0],lastShortDistpharmacy[0].Geometry.Coordinates[0])),
 											},
 										},
 									},
@@ -244,12 +254,21 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 											},
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
-												Text: "[地址] " + lastShortDistpharmacy[1].Properties.Address,
+												Text: "地址:" + lastShortDistpharmacy[1].Properties.Address,
+											},
+											&linebot.TextComponent{
+												Type: linebot.FlexComponentTypeText,
+												Text: "電話: " + lastShortDistpharmacy[1].Properties.Phone,
 											},
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
 												Text: "[剩餘口罩] 大人：" + strconv.Itoa(lastShortDistpharmacy[1].Properties.Mask_adult) +
 													"、小孩：" + strconv.Itoa(lastShortDistpharmacy[1].Properties.Mask_child),
+											},
+											&linebot.ButtonComponent{
+												Type: linebot.FlexComponentTypeText,
+												Action: linebot.NewURIAction("地圖",
+													fmt.Sprintf(MapURL, lastShortDistpharmacy[1].Geometry.Coordinates[0],lastShortDistpharmacy[1].Geometry.Coordinates[0])),
 											},
 										},
 									},
@@ -277,12 +296,21 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 											},
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
-												Text: "[地址] " + lastShortDistpharmacy[2].Properties.Address,
+												Text: "地址: " + lastShortDistpharmacy[2].Properties.Address,
+											},
+											&linebot.TextComponent{
+												Type: linebot.FlexComponentTypeText,
+												Text: "電話: " + lastShortDistpharmacy[2].Properties.Phone,
 											},
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
 												Text: "[剩餘口罩] 大人：" + strconv.Itoa(lastShortDistpharmacy[2].Properties.Mask_adult) +
 													"、小孩：" + strconv.Itoa(lastShortDistpharmacy[2].Properties.Mask_child),
+											},
+											&linebot.ButtonComponent{
+												Type: linebot.FlexComponentTypeText,
+												Action: linebot.NewURIAction("地圖",
+													fmt.Sprintf(MapURL, lastShortDistpharmacy[2].Geometry.Coordinates[0],lastShortDistpharmacy[2].Geometry.Coordinates[0])),
 											},
 										},
 									},
@@ -310,12 +338,21 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 											},
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
-												Text: "[地址] " + lastShortDistpharmacy[3].Properties.Address,
+												Text: "地址: " + lastShortDistpharmacy[3].Properties.Address,
+											},
+											&linebot.TextComponent{
+												Type: linebot.FlexComponentTypeText,
+												Text: "電話 " + lastShortDistpharmacy[3].Properties.Phone,
 											},
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
 												Text: "[剩餘口罩] 大人：" + strconv.Itoa(lastShortDistpharmacy[3].Properties.Mask_adult) +
 													"、小孩：" + strconv.Itoa(lastShortDistpharmacy[3].Properties.Mask_child),
+											},
+											&linebot.ButtonComponent{
+												Type: linebot.FlexComponentTypeText,
+												Action: linebot.NewURIAction("地圖",
+													fmt.Sprintf(MapURL, lastShortDistpharmacy[3].Geometry.Coordinates[0],lastShortDistpharmacy[3].Geometry.Coordinates[0])),
 											},
 										},
 									},
@@ -343,12 +380,21 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 											},
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
-												Text: "[地址] " + lastShortDistpharmacy[4].Properties.Address,
+												Text: "地址: " + lastShortDistpharmacy[4].Properties.Address,
+											},
+											&linebot.TextComponent{
+												Type: linebot.FlexComponentTypeText,
+												Text: "電話: " + lastShortDistpharmacy[4].Properties.Phone,
 											},
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
 												Text: "[剩餘口罩] 大人：" + strconv.Itoa(lastShortDistpharmacy[4].Properties.Mask_adult) +
 													"、小孩：" + strconv.Itoa(lastShortDistpharmacy[4].Properties.Mask_child),
+											},
+											&linebot.ButtonComponent{
+												Type: linebot.FlexComponentTypeText,
+												Action: linebot.NewURIAction("地圖",
+													fmt.Sprintf(MapURL, lastShortDistpharmacy[4].Geometry.Coordinates[0],lastShortDistpharmacy[4].Geometry.Coordinates[0])),
 											},
 										},
 									},
@@ -380,35 +426,6 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 							&linebot.CarouselContainer{
 								Type: linebot.FlexContainerTypeCarousel,
 								Contents: []*linebot.BubbleContainer{
-									//第一個旋轉選單
-									{
-										Type:      linebot.FlexContainerTypeCarousel,
-										Size:      linebot.FlexBubbleSizeTypeGiga,
-										Direction: linebot.FlexBubbleDirectionTypeLTR,
-										Header:    nil,
-										Hero: &linebot.ImageComponent{
-											Type:  linebot.FlexComponentTypeImage,
-											URL:   imageURLPage2[rand.Intn(len(imageURLPage2))],
-											Align: linebot.FlexComponentAlignTypeCenter,
-											Size:  linebot.FlexImageSizeTypeFull,
-										},
-										Body: &linebot.BoxComponent{
-											Type:   linebot.FlexComponentTypeText,
-											Layout: linebot.FlexBoxLayoutTypeVertical,
-											Contents: []linebot.FlexComponent{
-												&linebot.TextComponent{
-													Type: linebot.FlexComponentTypeText,
-													Text: "溫馨提醒：",
-												},
-												&linebot.TextComponent{
-													Type: linebot.FlexComponentTypeText,
-													Text: "04/01: 新版‘員工自主健康聲明書'",
-												},
-											},
-										},
-										Footer: nil,
-										Styles: &linebot.BubbleStyle{},
-									},
 									//第二個旋轉選單
 									{
 										Type:      linebot.FlexContainerTypeCarousel,
@@ -425,6 +442,14 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 											Type:   linebot.FlexComponentTypeButton,
 											Layout: linebot.FlexBoxLayoutTypeVertical,
 											Contents: []linebot.FlexComponent{
+												&linebot.TextComponent{
+													Type: linebot.FlexComponentTypeText,
+													Text: "溫馨提醒：",
+												},
+												&linebot.TextComponent{
+													Type: linebot.FlexComponentTypeText,
+													Text: "04/01: 新版‘員工自主健康聲明書'",
+												},
 												&linebot.ButtonComponent{
 													Type: linebot.FlexComponentTypeButton,
 													Action: linebot.NewDatetimePickerAction("設定提醒時間", "remindTime", "time",
