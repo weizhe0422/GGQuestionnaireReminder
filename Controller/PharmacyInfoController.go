@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/weizhe0422/GGQuestionnaireReminder/Model"
 	"io/ioutil"
+	"log"
 	"math"
 	"net/http"
 )
@@ -29,6 +30,7 @@ func (p *PharmacyInfo) GetPharmacyResp() ([]byte, error){
 
 func (p *PharmacyInfo) GetPharmacyInfoList(pharmacyResp []byte) ([]Model.PharmacyInfo, error){
 	var pharmacyInfos Model.PharmacyInfoCollection
+	log.Println("pharmacyResp:", string(pharmacyResp)[0:500])
 	if err := json.Unmarshal(pharmacyResp, &pharmacyInfos); err != nil {
 		return nil, err
 	}
