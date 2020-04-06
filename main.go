@@ -207,20 +207,58 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 										Contents: []linebot.FlexComponent{
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
+												Size: linebot.FlexTextSizeTypeXl,
+												Weight: linebot.FlexTextWeightTypeBold,
 												Text: lastShortDistpharmacy[0].Properties.Name,
 											},
-											&linebot.TextComponent{
-												Type: linebot.FlexComponentTypeText,
-												Text: "地址: " + lastShortDistpharmacy[0].Properties.Address,
+											&linebot.BoxComponent{
+												Layout: linebot.FlexBoxLayoutTypeBaseline,
+												Contents: []linebot.FlexComponent{
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#aaaaaa",
+														Text: "地址",
+													},
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#666666",
+														Wrap: true,
+														Text: lastShortDistpharmacy[0].Properties.Address,
+													},
+												},
 											},
-											&linebot.TextComponent{
-												Type: linebot.FlexComponentTypeText,
-												Text: "電話: " + lastShortDistpharmacy[0].Properties.Phone,
+											&linebot.BoxComponent{
+												Layout: linebot.FlexBoxLayoutTypeBaseline,
+												Contents: []linebot.FlexComponent{
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#aaaaaa",
+														Text: "電話",
+													},
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#666666",
+														Wrap: true,
+														Text: lastShortDistpharmacy[0].Properties.Phone,
+													},
+												},
 											},
-											&linebot.TextComponent{
-												Type: linebot.FlexComponentTypeText,
-												Text: "[剩餘口罩] 大人：" + strconv.Itoa(lastShortDistpharmacy[0].Properties.Mask_adult) +
-													"、小孩：" + strconv.Itoa(lastShortDistpharmacy[0].Properties.Mask_child),
+											&linebot.BoxComponent{
+												Layout: linebot.FlexBoxLayoutTypeBaseline,
+												Contents: []linebot.FlexComponent{
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#aaaaaa",
+														Text: "剩餘口罩",
+													},
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#666666",
+														Wrap: true,
+														Text: "大人：" + strconv.Itoa(lastShortDistpharmacy[0].Properties.Mask_adult) +
+															"、小孩：" + strconv.Itoa(lastShortDistpharmacy[0].Properties.Mask_child),
+													},
+												},
 											},
 											&linebot.ButtonComponent{
 												Type: linebot.FlexComponentTypeText,
@@ -240,7 +278,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 									Header:    nil,
 									Hero: &linebot.ImageComponent{
 										Type:  linebot.FlexComponentTypeImage,
-										URL:   pharmacyImgURL[1],
+										URL:   pharmacyImgURL[0],
 										Align: linebot.FlexComponentAlignTypeCenter,
 										Size:  linebot.FlexImageSizeTypeFull,
 									},
@@ -250,20 +288,58 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 										Contents: []linebot.FlexComponent{
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
+												Size: linebot.FlexTextSizeTypeXl,
+												Weight: linebot.FlexTextWeightTypeBold,
 												Text: lastShortDistpharmacy[1].Properties.Name,
 											},
-											&linebot.TextComponent{
-												Type: linebot.FlexComponentTypeText,
-												Text: "地址:" + lastShortDistpharmacy[1].Properties.Address,
+											&linebot.BoxComponent{
+												Layout: linebot.FlexBoxLayoutTypeBaseline,
+												Contents: []linebot.FlexComponent{
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#aaaaaa",
+														Text: "地址",
+													},
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#666666",
+														Wrap: true,
+														Text: lastShortDistpharmacy[1].Properties.Address,
+													},
+												},
 											},
-											&linebot.TextComponent{
-												Type: linebot.FlexComponentTypeText,
-												Text: "電話: " + lastShortDistpharmacy[1].Properties.Phone,
+											&linebot.BoxComponent{
+												Layout: linebot.FlexBoxLayoutTypeBaseline,
+												Contents: []linebot.FlexComponent{
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#aaaaaa",
+														Text: "電話",
+													},
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#666666",
+														Wrap: true,
+														Text: lastShortDistpharmacy[1].Properties.Phone,
+													},
+												},
 											},
-											&linebot.TextComponent{
-												Type: linebot.FlexComponentTypeText,
-												Text: "[剩餘口罩] 大人：" + strconv.Itoa(lastShortDistpharmacy[1].Properties.Mask_adult) +
-													"、小孩：" + strconv.Itoa(lastShortDistpharmacy[1].Properties.Mask_child),
+											&linebot.BoxComponent{
+												Layout: linebot.FlexBoxLayoutTypeBaseline,
+												Contents: []linebot.FlexComponent{
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#aaaaaa",
+														Text: "剩餘口罩",
+													},
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#666666",
+														Wrap: true,
+														Text: "大人：" + strconv.Itoa(lastShortDistpharmacy[1].Properties.Mask_adult) +
+															"、小孩：" + strconv.Itoa(lastShortDistpharmacy[1].Properties.Mask_child),
+													},
+												},
 											},
 											&linebot.ButtonComponent{
 												Type: linebot.FlexComponentTypeText,
@@ -282,7 +358,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 									Header:    nil,
 									Hero: &linebot.ImageComponent{
 										Type:  linebot.FlexComponentTypeImage,
-										URL:   pharmacyImgURL[2],
+										URL:   pharmacyImgURL[0],
 										Align: linebot.FlexComponentAlignTypeCenter,
 										Size:  linebot.FlexImageSizeTypeFull,
 									},
@@ -292,20 +368,58 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 										Contents: []linebot.FlexComponent{
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
+												Size: linebot.FlexTextSizeTypeXl,
+												Weight: linebot.FlexTextWeightTypeBold,
 												Text: lastShortDistpharmacy[2].Properties.Name,
 											},
-											&linebot.TextComponent{
-												Type: linebot.FlexComponentTypeText,
-												Text: "地址: " + lastShortDistpharmacy[2].Properties.Address,
+											&linebot.BoxComponent{
+												Layout: linebot.FlexBoxLayoutTypeBaseline,
+												Contents: []linebot.FlexComponent{
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#aaaaaa",
+														Text: "地址",
+													},
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#666666",
+														Wrap: true,
+														Text: lastShortDistpharmacy[2].Properties.Address,
+													},
+												},
 											},
-											&linebot.TextComponent{
-												Type: linebot.FlexComponentTypeText,
-												Text: "電話: " + lastShortDistpharmacy[2].Properties.Phone,
+											&linebot.BoxComponent{
+												Layout: linebot.FlexBoxLayoutTypeBaseline,
+												Contents: []linebot.FlexComponent{
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#aaaaaa",
+														Text: "電話",
+													},
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#666666",
+														Wrap: true,
+														Text: lastShortDistpharmacy[2].Properties.Phone,
+													},
+												},
 											},
-											&linebot.TextComponent{
-												Type: linebot.FlexComponentTypeText,
-												Text: "[剩餘口罩] 大人：" + strconv.Itoa(lastShortDistpharmacy[2].Properties.Mask_adult) +
-													"、小孩：" + strconv.Itoa(lastShortDistpharmacy[2].Properties.Mask_child),
+											&linebot.BoxComponent{
+												Layout: linebot.FlexBoxLayoutTypeBaseline,
+												Contents: []linebot.FlexComponent{
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#aaaaaa",
+														Text: "剩餘口罩",
+													},
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#666666",
+														Wrap: true,
+														Text: "大人：" + strconv.Itoa(lastShortDistpharmacy[2].Properties.Mask_adult) +
+															"、小孩：" + strconv.Itoa(lastShortDistpharmacy[2].Properties.Mask_child),
+													},
+												},
 											},
 											&linebot.ButtonComponent{
 												Type: linebot.FlexComponentTypeText,
@@ -324,7 +438,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 									Header:    nil,
 									Hero: &linebot.ImageComponent{
 										Type:  linebot.FlexComponentTypeImage,
-										URL:   pharmacyImgURL[3],
+										URL:   pharmacyImgURL[0],
 										Align: linebot.FlexComponentAlignTypeCenter,
 										Size:  linebot.FlexImageSizeTypeFull,
 									},
@@ -334,20 +448,58 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 										Contents: []linebot.FlexComponent{
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
+												Size: linebot.FlexTextSizeTypeXl,
+												Weight: linebot.FlexTextWeightTypeBold,
 												Text: lastShortDistpharmacy[3].Properties.Name,
 											},
-											&linebot.TextComponent{
-												Type: linebot.FlexComponentTypeText,
-												Text: "地址: " + lastShortDistpharmacy[3].Properties.Address,
+											&linebot.BoxComponent{
+												Layout: linebot.FlexBoxLayoutTypeBaseline,
+												Contents: []linebot.FlexComponent{
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#aaaaaa",
+														Text: "地址",
+													},
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#666666",
+														Wrap: true,
+														Text: lastShortDistpharmacy[3].Properties.Address,
+													},
+												},
 											},
-											&linebot.TextComponent{
-												Type: linebot.FlexComponentTypeText,
-												Text: "電話 " + lastShortDistpharmacy[3].Properties.Phone,
+											&linebot.BoxComponent{
+												Layout: linebot.FlexBoxLayoutTypeBaseline,
+												Contents: []linebot.FlexComponent{
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#aaaaaa",
+														Text: "電話",
+													},
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#666666",
+														Wrap: true,
+														Text: lastShortDistpharmacy[3].Properties.Phone,
+													},
+												},
 											},
-											&linebot.TextComponent{
-												Type: linebot.FlexComponentTypeText,
-												Text: "[剩餘口罩] 大人：" + strconv.Itoa(lastShortDistpharmacy[3].Properties.Mask_adult) +
-													"、小孩：" + strconv.Itoa(lastShortDistpharmacy[3].Properties.Mask_child),
+											&linebot.BoxComponent{
+												Layout: linebot.FlexBoxLayoutTypeBaseline,
+												Contents: []linebot.FlexComponent{
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#aaaaaa",
+														Text: "剩餘口罩",
+													},
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#666666",
+														Wrap: true,
+														Text: "大人：" + strconv.Itoa(lastShortDistpharmacy[3].Properties.Mask_adult) +
+															"、小孩：" + strconv.Itoa(lastShortDistpharmacy[3].Properties.Mask_child),
+													},
+												},
 											},
 											&linebot.ButtonComponent{
 												Type: linebot.FlexComponentTypeText,
@@ -366,7 +518,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 									Header:    nil,
 									Hero: &linebot.ImageComponent{
 										Type:  linebot.FlexComponentTypeImage,
-										URL:   pharmacyImgURL[4],
+										URL:   pharmacyImgURL[0],
 										Align: linebot.FlexComponentAlignTypeCenter,
 										Size:  linebot.FlexImageSizeTypeFull,
 									},
@@ -376,20 +528,58 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 										Contents: []linebot.FlexComponent{
 											&linebot.TextComponent{
 												Type: linebot.FlexComponentTypeText,
+												Size: linebot.FlexTextSizeTypeXl,
+												Weight: linebot.FlexTextWeightTypeBold,
 												Text: lastShortDistpharmacy[4].Properties.Name,
 											},
-											&linebot.TextComponent{
-												Type: linebot.FlexComponentTypeText,
-												Text: "地址: " + lastShortDistpharmacy[4].Properties.Address,
+											&linebot.BoxComponent{
+												Layout: linebot.FlexBoxLayoutTypeBaseline,
+												Contents: []linebot.FlexComponent{
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#aaaaaa",
+														Text: "地址",
+													},
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#666666",
+														Wrap: true,
+														Text: lastShortDistpharmacy[4].Properties.Address,
+													},
+												},
 											},
-											&linebot.TextComponent{
-												Type: linebot.FlexComponentTypeText,
-												Text: "電話: " + lastShortDistpharmacy[4].Properties.Phone,
+											&linebot.BoxComponent{
+												Layout: linebot.FlexBoxLayoutTypeBaseline,
+												Contents: []linebot.FlexComponent{
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#aaaaaa",
+														Text: "電話",
+													},
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#666666",
+														Wrap: true,
+														Text: lastShortDistpharmacy[4].Properties.Phone,
+													},
+												},
 											},
-											&linebot.TextComponent{
-												Type: linebot.FlexComponentTypeText,
-												Text: "[剩餘口罩] 大人：" + strconv.Itoa(lastShortDistpharmacy[4].Properties.Mask_adult) +
-													"、小孩：" + strconv.Itoa(lastShortDistpharmacy[4].Properties.Mask_child),
+											&linebot.BoxComponent{
+												Layout: linebot.FlexBoxLayoutTypeBaseline,
+												Contents: []linebot.FlexComponent{
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#aaaaaa",
+														Text: "剩餘口罩",
+													},
+													&linebot.TextComponent{
+														Type: linebot.FlexComponentTypeText,
+														Color: "#666666",
+														Wrap: true,
+														Text: "大人：" + strconv.Itoa(lastShortDistpharmacy[4].Properties.Mask_adult) +
+															"、小孩：" + strconv.Itoa(lastShortDistpharmacy[4].Properties.Mask_child),
+													},
+												},
 											},
 											&linebot.ButtonComponent{
 												Type: linebot.FlexComponentTypeText,
@@ -461,9 +651,10 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 											Contents: []linebot.FlexComponent{
 												&linebot.TextComponent{
 													Type: linebot.FlexComponentTypeText,
-													Text: "溫馨提醒： 4/1 有新版聲明書要填喔！",
-													Size: linebot.FlexTextSizeTypeXl,
+													Text: "溫馨提醒： 新版聲明書要填喔！",
+													Size: linebot.FlexTextSizeTypeLg,
 													Weight: linebot.FlexTextWeightTypeBold,
+													Wrap: true,
 												},
 												&linebot.ButtonComponent{
 													Type: linebot.FlexComponentTypeButton,
