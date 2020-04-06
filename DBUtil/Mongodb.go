@@ -104,6 +104,7 @@ func (m *MongoDB) UpdateRecord(filterInfo bson.M, newInfo bson.M) (bool, error) 
 	dbUtil, _ := m.getMongoDB()
 	err := dbUtil.Ping(context.TODO(), nil)
 	if err != nil {
+		log.Printf("failed to ping mongoDB: %v", err)
 		return false, fmt.Errorf("failed to ping mongoDB: %v", err)
 	}
 	defer dbUtil.Disconnect(context.TODO())
@@ -115,7 +116,9 @@ func (m *MongoDB) UpdateRecord(filterInfo bson.M, newInfo bson.M) (bool, error) 
 		return false, fmt.Errorf("failed to update: %v", err)
 	}
 	if updateResult.MatchedCount > 0 && updateResult.ModifiedCount > 0 {
+		log.Printf("update ok!")
 		return true, nil
 	}
+	log.Printf("can not found record")
 	return false, fmt.Errorf("can not found record")
 }
