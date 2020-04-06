@@ -136,9 +136,13 @@ func PushAlarmMessage() {
 			}
 			msgCosum, _ := bot.GetMessageConsumption().Do()
 			log.Printf("推送提提醒給%s成功, 訊息已使用量: %d", user.LineId,msgCosum.TotalUsage)
-			tomorrow := time.Now().AddDate(0, 0, 1)
 			setHour, _ := strconv.Atoi(user.SettingRemindTime[0:2])
 			setMin, _ := strconv.Atoi(user.SettingRemindTime[3:5])
+
+			tomorrow := time.Now().AddDate(0, 0, 1)
+			if setHour < 8 {
+				tomorrow = time.Now().AddDate(0, 0, 2)
+			}
 			_, err = mongo.UpdateRecord(bson.M{"lineid": user.LineId},
 				bson.M{"$set": bson.M{"lastremindtime": time.Now().In(timeLoc),
 					"nextremindtime": time.Date(tomorrow.Year(), tomorrow.Month(), tomorrow.Day(),
