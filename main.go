@@ -435,6 +435,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					}else{
 						bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("查詢不到設定紀錄！")).Do()
 					}
+					msgCosum, _ := bot.GetMessageConsumption().Do()
+					log.Printf("回覆查詢設定時間成功，目前已使用訊息量:%d",msgCosum.TotalUsage)
 				default:
 					bot.ReplyMessage(event.ReplyToken,
 						linebot.NewFlexMessage("請問你想做什麼?",
