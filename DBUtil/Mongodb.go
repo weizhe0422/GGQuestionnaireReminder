@@ -36,7 +36,7 @@ func (m *MongoDB) InsertOneRecord(userInfo Model.User) (*mongo.InsertOneResult, 
 	collection := dbUtil.Database(m.Database).Collection(m.Collection)
 
 	timeLoc, _ := time.LoadLocation("Asia/Shanghai")
-	if Exist,userInfo, _ := m.FindRecord(userInfo.LineId);Exist {
+	if Exist,_, _ := m.FindRecord(userInfo.LineId);Exist {
 		//return nil, fmt.Errorf("already registed")
 		log.Println("already registed:",userInfo)
 		m.UpdateRecord(bson.M{"lineid": userInfo.LineId},
