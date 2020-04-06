@@ -656,26 +656,15 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 													Weight: linebot.FlexTextWeightTypeBold,
 													Wrap: true,
 												},
-												&linebot.BoxComponent{
-													Layout: linebot.FlexBoxLayoutTypeBaseline,
-													Contents: []linebot.FlexComponent{
-														&linebot.TextComponent{
-															Type: linebot.FlexComponentTypeText,
-															Text: "提醒時間：",
-															Size: linebot.FlexTextSizeTypeLg,
-															Weight: linebot.FlexTextWeightTypeBold,
-														},
-														&linebot.ButtonComponent{
-															Type: linebot.FlexComponentTypeButton,
-															Action: linebot.NewDatetimePickerAction("設定時間", "remindTime", "time",
-																"07:00", "23:59", "00:00"),
-														},
-														&linebot.ButtonComponent{
-															Type: linebot.FlexComponentTypeButton,
-															Action: linebot.NewMessageAction("查詢設定", "開始查詢提醒時間設定"),
-														},
-													},
+												&linebot.ButtonComponent{
+													Type: linebot.FlexComponentTypeButton,
+													Action: linebot.NewDatetimePickerAction("設定提醒時間", "remindTime", "time",
+														"07:00", "23:59", "00:00"),
 												},
+												&linebot.ButtonComponent{
+													Type: linebot.FlexComponentTypeButton,
+													Action: linebot.NewMessageAction("查詢時間設定", "開始查詢提醒時間設定"),
+												},,
 												&linebot.ButtonComponent{
 													Type:   linebot.FlexComponentTypeButton,
 													Action: linebot.NewMessageAction("查詢附近藥局", "開始查詢附近藥局"),
