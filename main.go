@@ -134,8 +134,8 @@ func PushAlarmMessage() {
 				log.Printf("推送提提醒給%s失敗:%v", user.LineId, err)
 				continue
 			}
-			msgQuota, _ := bot.GetMessageQuota().Do()
-			log.Printf("推送提提醒給%s成功, 訊息剩餘量: %d", user.LineId,msgQuota.Value)
+			msgCosum, _ := bot.GetMessageConsumption().Do()
+			log.Printf("推送提提醒給%s成功, 訊息剩餘量: %d", user.LineId,msgCosum.TotalUsage)
 			tomorrow := time.Now().AddDate(0, 0, 1)
 			setHour, _ := strconv.Atoi(user.SettingRemindTime[0:2])
 			setMin, _ := strconv.Atoi(user.SettingRemindTime[3:5])
@@ -407,8 +407,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					log.Printf("failed to send pharmacy info: %v",err)
 					return
 				}
-				msgQuota, _ := bot.GetMessageQuota().Do()
-				log.Printf("推送附近藥局資訊成功，目前剩餘訊息量:%d",msgQuota.Value)
+				msgCosum, _ := bot.GetMessageConsumption().Do()
+				log.Printf("推送附近藥局資訊成功，目前剩餘訊息量:%d",msgCosum.TotalUsage)
 				//bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("被你找到新功能了！ 之後才會支援喔！")).Do()
 			case *linebot.TextMessage:
 				log.Println(message.Text)
@@ -422,8 +422,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					if err != nil {
 						log.Printf("error to get quick replay menu:%v", err)
 					}
-					msgQuota, _ := bot.GetMessageQuota().Do()
-					log.Printf("推送位置視窗成功，目前剩餘訊息量:%d",msgQuota.Value)
+					msgCosum, _ := bot.GetMessageConsumption().Do()
+					log.Printf("推送位置視窗成功，目前剩餘訊息量:%d",msgCosum.TotalUsage)
 				default:
 					bot.ReplyMessage(event.ReplyToken,
 						linebot.NewFlexMessage("請問你想做什麼?",
@@ -478,8 +478,8 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 									},
 								},
 							})).Do()
-					msgQuota, _ := bot.GetMessageQuota().Do()
-					log.Printf("推送選單成功，目前剩餘訊息量:%d",msgQuota.Value)
+					msgCosum, _ := bot.GetMessageConsumption().Do()
+					log.Printf("推送選單成功，目前剩餘訊息量:%d",msgCosum.TotalUsage)
 				}
 			}
 		case linebot.EventTypePostback:
@@ -500,14 +500,14 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("設定時間失敗，請重新嘗試!"))
 				}
 				bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("預定了每天"+event.Postback.Params.Time+"提醒填寫問卷!")).Do()
-				msgQuota, _ := bot.GetMessageQuota().Do()
-				log.Printf("推送設定提醒時間成功，目前剩餘訊息量:%d",msgQuota.Value)
+				msgCosum, _ := bot.GetMessageConsumption().Do()
+				log.Printf("推送設定提醒時間成功，目前剩餘訊息量:%d",msgCosum.TotalUsage)
 				log.Println("Mongo insert info: ", record)
 			}
 		default:
 			bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("DEFAULT")).Do()
-			msgQuota, _ := bot.GetMessageQuota().Do()
-			log.Printf("推送Default訊息成功，目前剩餘訊息量:%d",msgQuota.Value)
+			msgCosum, _ := bot.GetMessageConsumption().Do()
+			log.Printf("推送Default訊息成功，目前剩餘訊息量:%d",msgCosum.TotalUsage)
 		}
 	}
 }
