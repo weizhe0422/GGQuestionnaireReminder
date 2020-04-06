@@ -1,4 +1,4 @@
-# GG順時中 - Line Bot: 提醒員工回報體溫，並提供查詢COVID-19相關資料
+# GG順時中 Line Bot
  This is a Line Bot to remind staff to report body temperature and search information for COVID-19.
 
 ## 使用資料參考來源
