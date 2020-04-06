@@ -14,11 +14,12 @@
 
 ## 功能
  1. 設定提醒回報體溫時間
-![Remind](https://github.com/weizhe0422/GGQuestionnaireReminder/blob/master/Screenshots/Remind.png)
+ ![Remind](https://github.com/weizhe0422/GGQuestionnaireReminder/blob/master/Screenshots/Remind.png)
 
  2. 查詢設定時間
-![LookupSetting](https://github.com/weizhe0422/GGQuestionnaireReminder/blob/master/Screenshots/LookupSetting.jpg) 
+ 
+ ![LookupSetting](https://github.com/weizhe0422/GGQuestionnaireReminder/blob/master/Screenshots/LookupSetting.jpg) 
 
 3. 查詢距離你最近的五家藥局以及口罩剩餘數量
-![LookupMaskInfo](https://github.com/weizhe0422/GGQuestionnaireReminder/blob/master/Screenshots/LookupMaskInfo.png)
+ ![LookupMaskInfo](https://github.com/weizhe0422/GGQuestionnaireReminder/blob/master/Screenshots/LookupMaskInfo.png)
  
