@@ -485,7 +485,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 		case linebot.EventTypePostback:
 			switch event.Postback.Data {
 			case "remindTime": //event.Postback.Params.Time
-				tomorrow := time.Now().AddDate(0, 0, 0)
+				tomorrow := time.Now().AddDate(0, 0, 1)
 				setHour, _ := strconv.Atoi(event.Postback.Params.Time[0:2])
 				setMin, _ := strconv.Atoi(event.Postback.Params.Time[3:5])
 				timeLoc, _ := time.LoadLocation("Asia/Shanghai")
@@ -505,9 +505,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				log.Println("Mongo insert info: ", record)
 			}
 		default:
-			bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("DEFAULT")).Do()
-			msgCosum, _ := bot.GetMessageConsumption().Do()
-			log.Printf("推送Default訊息成功，目前已使用訊息量:%d",msgCosum.TotalUsage)
+
 		}
 	}
 }
