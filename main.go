@@ -664,7 +664,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 												&linebot.ButtonComponent{
 													Type: linebot.FlexComponentTypeButton,
 													Action: linebot.NewMessageAction("查詢時間設定", "開始查詢提醒時間設定"),
-												},,
+												},
 												&linebot.ButtonComponent{
 													Type:   linebot.FlexComponentTypeButton,
 													Action: linebot.NewMessageAction("查詢附近藥局", "開始查詢附近藥局"),
