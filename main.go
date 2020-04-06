@@ -641,7 +641,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 										Header:    nil,
 										Hero: &linebot.ImageComponent{
 											Type:  linebot.FlexComponentTypeImage,
-											URL:   imageURLPage1[rand.Intn(len(imageURLPage1))],
+											URL:   imageURLPage1[rand.Intn(len(imageURLPage1)-1)],
 											Align: linebot.FlexComponentAlignTypeCenter,
 											Size:  linebot.FlexImageSizeTypeFull,
 										},
@@ -681,7 +681,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 										Header:    nil,
 										Hero: &linebot.ImageComponent{
 											Type:  linebot.FlexComponentTypeImage,
-											URL:   imageURLPage2[rand.Intn(len(imageURLPage1))],
+											URL:   imageURLPage2[rand.Intn(len(imageURLPage2)-1)],
 											Align: linebot.FlexComponentAlignTypeCenter,
 											Size:  linebot.FlexImageSizeTypeFull,
 										},
