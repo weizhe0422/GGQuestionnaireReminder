@@ -413,7 +413,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 			case *linebot.TextMessage:
 				log.Println(message.Text)
 				switch message.Text {
-				case "開始查詢":
+				case "開始查詢附近藥局":
 					log.Println("跳出位置視窗")
 					_, err := bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("請選擇動作").WithQuickReplies(
 						linebot.NewQuickReplyItems(
@@ -424,6 +424,17 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 					}
 					msgCosum, _ := bot.GetMessageConsumption().Do()
 					log.Printf("推送位置視窗成功，目前已使用訊息量:%d",msgCosum.TotalUsage)
+				case "開始查詢提醒時間設定":
+					isFind, userInfo, err := mongo.FindRecord(event.Source.UserID)
+					if err != nil {
+						log.Printf("failed to get all record: %v", err)
+						return
+					}
+					if isFind {
+						bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("你已設定明天"+userInfo.SettingRemindTime+"提醒你囉！")).Do()
+					}else{
+						bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("查詢不到設定紀錄！")).Do()
+					}
 				default:
 					bot.ReplyMessage(event.ReplyToken,
 						linebot.NewFlexMessage("請問你想做什麼?",
@@ -448,11 +459,9 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 											Contents: []linebot.FlexComponent{
 												&linebot.TextComponent{
 													Type: linebot.FlexComponentTypeText,
-													Text: "溫馨提醒：",
-												},
-												&linebot.TextComponent{
-													Type: linebot.FlexComponentTypeText,
-													Text: "04/01: 新版‘員工自主健康聲明書'",
+													Text: "溫馨提醒： 4/1 有新版聲明書要填喔！",
+													Size: linebot.FlexTextSizeTypeXl,
+													Weight: linebot.FlexTextWeightTypeBold,
 												},
 												&linebot.ButtonComponent{
 													Type: linebot.FlexComponentTypeButton,
@@ -460,16 +469,40 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 														"07:00", "23:59", "00:00"),
 												},
 												&linebot.ButtonComponent{
+													Type: linebot.FlexComponentTypeButton,
+													Action: linebot.NewMessageAction("查詢提醒時間設定", "開始查詢提醒時間設定"),
+												},
+												&linebot.ButtonComponent{
+													Type:   linebot.FlexComponentTypeButton,
+													Action: linebot.NewMessageAction("查詢附近藥局", "開始查詢附近藥局"),
+												},
+											},
+										},
+										Footer: nil,
+										Styles: &linebot.BubbleStyle{},
+									},
+									{
+										Type:      linebot.FlexContainerTypeCarousel,
+										Size:      linebot.FlexBubbleSizeTypeGiga,
+										Direction: linebot.FlexBubbleDirectionTypeLTR,
+										Header:    nil,
+										Hero: &linebot.ImageComponent{
+											Type:  linebot.FlexComponentTypeImage,
+											URL:   imageURLPage2[rand.Intn(len(imageURLPage1))],
+											Align: linebot.FlexComponentAlignTypeCenter,
+											Size:  linebot.FlexImageSizeTypeFull,
+										},
+										Body: &linebot.BoxComponent{
+											Type:   linebot.FlexComponentTypeButton,
+											Layout: linebot.FlexBoxLayoutTypeVertical,
+											Contents: []linebot.FlexComponent{
+												&linebot.ButtonComponent{
 													Type:   linebot.FlexComponentTypeButton,
 													Action: linebot.NewURIAction("防疫問卷", surveycakeURL),
 												},
 												&linebot.ButtonComponent{
 													Type:   linebot.FlexComponentTypeButton,
 													Action: linebot.NewURIAction("填寫 '員工自主健康聲明書(ver. 20200319)' ", healthydeclareURL),
-												},
-												&linebot.ButtonComponent{
-													Type:   linebot.FlexComponentTypeButton,
-													Action: linebot.NewMessageAction("查詢附近藥局", "開始查詢"),
 												},
 											},
 										},
@@ -499,7 +532,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("設定時間失敗，請重新嘗試!"))
 				}
-				bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("預定了每天"+event.Postback.Params.Time+"提醒填寫問卷!")).Do()
+				//bot.PushMessage(event.Source.UserID, linebot.NewTextMessage("預定了每天"+event.Postback.Params.Time+"提醒填寫問卷!")).Do()
 				msgCosum, _ := bot.GetMessageConsumption().Do()
 				log.Printf("推送設定提醒時間成功，目前已使用訊息量:%d",msgCosum.TotalUsage)
 				log.Println("Mongo insert info: ", record)

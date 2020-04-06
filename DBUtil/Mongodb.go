@@ -81,22 +81,23 @@ func (m *MongoDB) FindAllRecord() (*mongo.Cursor, error) {
 	return findAllResult, nil
 }
 
-func (m *MongoDB) FindRecord(value string) (bool, error) {
+func (m *MongoDB) FindRecord(value string) (bool, *Model.User2, error) {
 	dbUtil, _ := m.getMongoDB()
 	err := dbUtil.Ping(context.TODO(), nil)
 	if err != nil {
-		return false, fmt.Errorf("failed to ping mongoDB: %v", err)
+		return false, nil, fmt.Errorf("failed to ping mongoDB: %v", err)
 	}
 	defer dbUtil.Disconnect(context.TODO())
 	collection := dbUtil.Database(m.Database).Collection(m.Collection)
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	filter := bson.M{"lineid": value}
-	err = collection.FindOne(ctx, filter).Decode(&Model.User2{})
+	findData := &Model.User2{}
+	err = collection.FindOne(ctx, filter).Decode(findData)
 	if err != nil {
 		log.Printf("failed to find: %v, value: %s", err, value)
-		return false, fmt.Errorf("failed to find: %v", err)
+		return false, nil, fmt.Errorf("failed to find: %v", err)
 	}
-	return true, nil
+	return true, findData, nil
 }
 
 func (m *MongoDB) UpdateRecord(filterInfo bson.M, newInfo bson.M) (bool, error) {
